@@ -1,0 +1,20 @@
+{
+  "name": "besoin",
+  "version": "0.0.1",
+  "description": "",
+  "main": "besoin.js",
+  "scripts": {
+    "test": "jasmine"
+  },
+  "author": "Pete Wall",
+  "dependencies": {
+    "ajv": "^6.10.0",
+    "async": "^3.0.1",
+    "executable": "^4.1.1",
+    "isexe": "^2.0.0",
+    "which": "^1.3.1"
+  },
+  "devDependencies": {
+    "jasmine": "^3.4.0"
+  }
+}
