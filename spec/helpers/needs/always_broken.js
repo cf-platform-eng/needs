@@ -4,8 +4,11 @@ class AlwaysBroken extends Need {
     super({}, input)
   }
 
-  check(callback) {
-    callback(new Error("I'm always broken"))
+  check() {
+    return Promise.reject({
+      need: this,
+      reason: "I'm always broken"
+    })
   }
 }
 

@@ -4,8 +4,11 @@ class AlwaysHappy extends Need {
     super({}, input)
   }
 
-  check(callback) {
-    callback(null, true)
+  check() {
+    return Promise.resolve({
+      need: this,
+      satisfied: true
+    })
   }
 }
 

@@ -1,0 +1,104 @@
+Besoin
+
+
+
+besoin cli
+* Contains the structure of a needs file
+    * list of needs
+    * and/or structures
+* Reads the needs file
+* Writes to the needs file
+* Maintains the list of need plugins
+
+besoin plugins
+* Checker of needs
+* Cli with one input
+* outputs 0 or non 0
+* Logs only on failure
+
+
+needs.json
+
+[
+    {
+        type: "environment_variable"
+        name: "OM_PASSWORD"
+    }
+    {
+        type: "environment_variable"
+        name: "OM_TARGET"
+    }
+    {
+        type: "environment_variable"
+        name: "OM_USERNAME"
+    }
+    {
+        type: "file"
+        path: "/input/my-tile-config.yml"
+    }
+    {
+        type: "file"
+        path: "/input/my-tile.pivotal"
+    }
+    {
+        type: "pcf",
+        version: ">=2.5"
+    }
+    {
+        type: "any",
+        needs: [ ... ]
+    }
+    {
+        type: "all",
+        needs: [ ... ]
+    }
+]
+
+
+example besoin cli calls
+$ besoin list
+{}
+$ besoin list --unsatisfied
+{}
+$ besoin check
+$ echo $?
+1
+$ besoin needs
+binary
+environment_variable
+file
+$ besoin need environment_variable
+Need: environment_variable
+Checks for a set environment va riable
+Schema:
+{
+    "type": "environment_variable",
+    "name": "<environment variable name>"
+}
+$ besoin add environment_variable PIVNET_TOKEN
+$ besoin need file
+Need: file
+Checks for a file in the file system
+Schema:
+{
+    "type": "file",
+    "path": "<path to file>"
+}
+$ besoin add file '{"path": "/input/my-tile.pivotal"}'
+
+
+
+example need cli calls
+$ file check {"path": "/input/my-tile.pivotal"}
+$ file info
+Checks for a file in the file system
+Schema:
+{
+    "type": "file",
+    "path": "<path to file>"
+}
+$ file validate {"path": "/input/my-tile.pivotal"}
+{
+    "type": "file",
+    "path": "/input/my-tile.pivotal"
+}

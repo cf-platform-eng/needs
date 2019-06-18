@@ -35,20 +35,16 @@ describe("file", function () {
   })
 
   describe("check", function () {
-    it("returns false if the file is not present", function (done) {
+    it("returns false if the file is not present", async function () {
       let need = new File({
         "type": "file",
         "path": "/this/file/does/not/exist"
       })
 
-      need.check((err, satisfied) => {
-        expect(err).toBeNull()
-        expect(satisfied).toBe(false)
-        done()
-      })
+      await expectAsync(need.check()).toBeResolvedTo({ need, satisfied: false })
     })
 
-    it("returns an error if there was a problem looking for the file", function (done) {
+    it("returns an error if there was a problem looking for the file", async function () {
       let need = new File({
         "type": "file",
         "path": "file-path"
@@ -59,25 +55,17 @@ describe("file", function () {
         callback("some-other-error")
       })
 
-      // eslint-disable-next-line no-unused-vars
-      need.check((err, satisfied) => {
-        expect(need.fs.access).toHaveBeenCalledWith("file-path",  jasmine.any(Function))
-        expect(err).not.toBeNull()
-        done()
-      })
+      await expectAsync(need.check()).toBeRejected()
+      expect(need.fs.access).toHaveBeenCalledWith("file-path",  jasmine.any(Function))
     })
 
-    it("returns true if the file is present", function (done) {
+    it("returns true if the file is present", async function () {
       let need = new File({
         "type": "file",
         "path": __filename
       })
 
-      need.check((err, satisfied) => {
-        expect(err).toBeNull()
-        expect(satisfied).toBe(true)
-        done()
-      })
+      await expectAsync(need.check()).toBeResolvedTo({ need, satisfied: true })
     })
   })
 

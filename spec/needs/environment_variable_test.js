@@ -49,20 +49,14 @@ describe("environment_variable", function () {
       "name": "MY_ENVIRONMENT_VARIABLE"
     })
 
-    it("returns false if the environment variable is not set", function () {
+    it("returns false if the environment variable is not set", async function () {
       delete process.env.MY_ENVIRONMENT_VARIABLE
-      need.check((err, satisfied) => {
-        expect(err).toBeNull()
-        expect(satisfied).toBe(false)
-      })
+      await expectAsync(need.check()).toBeResolvedTo({ need, satisfied: false })
     })
 
-    it("returns true if the environment variable is set", function () {
+    it("returns true if the environment variable is set", async function () {
       process.env.MY_ENVIRONMENT_VARIABLE = "set"
-      need.check((err, satisfied) => {
-        expect(err).toBeNull()
-        expect(satisfied).toBe(true)
-      })
+      await expectAsync(need.check()).toBeResolvedTo({ need, satisfied: true })
     })
   })
 
