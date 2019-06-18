@@ -5,7 +5,7 @@ const path = require("path")
 const { promisify } = require("util")
 const readFile = promisify(fs.readFile)
 
-const defaultNeedsFile = path.join(__dirname, "environmentvars.json")
+const defaultNeedsFile = path.join(__dirname, "needs.json")
 
 const Needs = require("./lib/needs.js")
 const Types = require("./lib/types.js")
@@ -76,7 +76,7 @@ require("yargs")
       console.log(type)
     })
   })
-  .command("info", "", (args) => {
+  .command("type", "get info for a given type", (args) => {
     let typeName = args.argv._[1]
     if (types.has(typeName)) {
       let type = types.get(args.argv._[1])

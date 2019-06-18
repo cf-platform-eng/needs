@@ -40,25 +40,6 @@ describe("Needs", function () {
     })
   })
 
-  describe("data", function () {
-    it("returns an empty array with no needs", function () {
-      let needs = new Needs()
-      expect(needs.data()).toEqual([])
-    })
-    
-    it("returns an object of the needs' data", function () {
-      let needs = new Needs([
-        new AlwaysHappy({"type": "always_happy"}),
-        new AlwaysBroken({"type": "always_broken"})
-      ])
-      expect(needs.data()).toEqual([{
-        "type": "always_happy"
-      }, {
-        "type": "always_broken"
-      }])
-    })
-  })
-
   describe("load", function () {
     it("rejects invalid need lists", async function () {
       let needs = new Needs()

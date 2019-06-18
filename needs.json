@@ -1,0 +1,16 @@
+[{
+    "type": "environment_variable",
+    "name": "PIVNET_TOKEN"
+}, {
+    "type": "file",
+    "path": "/Users/pwall/src/petewall/besoin/needs.json"
+}, {
+    "type": "file",
+    "path": "/this/file/does/not/exist"
+}, {
+    "type": "binary",
+    "name": "om"
+}, {
+    "type": "binary",
+    "path": "/bin/bash"
+}]

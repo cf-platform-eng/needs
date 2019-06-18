@@ -1,7 +1,6 @@
 let File = require("../../lib/needs/file.js")
 
 describe("file", function () {
-
   describe("validate", function () {
     it("throws on emtpy string", function () {
       expect(function () {
@@ -35,28 +34,32 @@ describe("file", function () {
   })
 
   describe("check", function () {
-    it("returns false if the file is not present", async function () {
-      let need = new File({
-        "type": "file",
-        "path": "/this/file/does/not/exist"
-      })
+    describe("file does not exist", function () {
+      it("returns false", async function () {
+        let need = new File({
+          "type": "file",
+          "path": "/this/file/does/not/exist"
+        })
 
-      await expectAsync(need.check()).toBeResolvedTo({ need, satisfied: false })
+        await expectAsync(need.check()).toBeResolvedTo({ need, satisfied: false })
+      })
     })
 
-    it("returns an error if there was a problem looking for the file", async function () {
-      let need = new File({
-        "type": "file",
-        "path": "file-path"
-      })
+    describe("there was a problem looking for the file", function () {
+      it("returns an error", async function () {
+        let need = new File({
+          "type": "file",
+          "path": "file-path"
+        })
 
-      spyOn(need.fs, "access")
-      need.fs.access.and.callFake((path, callback) => {
-        callback("some-other-error")
-      })
+        spyOn(need.fs, "access")
+        need.fs.access.and.callFake((path, callback) => {
+          callback("some-other-error")
+        })
 
-      await expectAsync(need.check()).toBeRejected()
-      expect(need.fs.access).toHaveBeenCalledWith("file-path",  jasmine.any(Function))
+        await expectAsync(need.check()).toBeRejected()
+        expect(need.fs.access).toHaveBeenCalledWith("file-path",  jasmine.any(Function))
+      })
     })
 
     it("returns true if the file is present", async function () {
