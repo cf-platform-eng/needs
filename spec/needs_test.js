@@ -3,7 +3,6 @@ const FakeTypes = require("./helpers/fake_types.js")
 const AlwaysBroken = require("./helpers/needs/always_broken.js")
 const AlwaysHappy = require("./helpers/needs/always_happy.js")
 const AlwaysSad = require("./helpers/needs/always_sad.js")
-// const Types = require("../lib/types.js")
 
 describe("Needs", function () {
   describe("getUnsatisfied", function () {
