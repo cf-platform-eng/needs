@@ -16,6 +16,13 @@
     "yargs": "^13.2.4"
   },
   "devDependencies": {
-    "jasmine": "^3.4.0"
+    "jasmine": "^3.4.0",
+    "pkg": "^4.4.0"
+  },
+  "bin": {
+    "besoin": "./besoin.js"
+  },
+  "pkg": {
+    "scripts": "lib/**/*.js"
   }
 }

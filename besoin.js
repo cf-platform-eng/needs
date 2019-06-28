@@ -7,7 +7,7 @@ const readFile = promisify(fs.readFile)
 
 const defaultNeedsFile = path.join(__dirname, "needs.json")
 
-const Needs = require("./lib/needs.js")
+const And = require("./lib/needs/and.js")
 const Types = require("./lib/types.js")
 const types = new Types()
 
@@ -16,18 +16,17 @@ function needsToJSON(needs) {
 }
 
 async function loadNeedsFromFile(file) {
-  let needs = new Needs()
-
   try {
     let raw = await readFile(file)
     let data = JSON.parse(raw)
-    await needs.load(data, types)
+    return new And({
+      type: "and",
+      needs: data
+    }, types)
   } catch (err) {
     console.error(err)
     process.exit(1)
   }
-
-  return needs
 }
 
 require("yargs")
@@ -50,8 +49,8 @@ require("yargs")
     }
 
     try {
-      let unsatisfied = await needs.getUnsatisfied()
-      console.log(needsToJSON(unsatisfied))
+      let result = await needs.check()
+      console.log(needsToJSON(result.unsatisfiedNeeds))
     } catch (err) {
       console.error("error: ", err)
       process.exit(1)
@@ -61,10 +60,10 @@ require("yargs")
     let needs = await loadNeedsFromFile(args.file)
 
     try {
-      let unsatisfied = await needs.getUnsatisfied()
-      if (unsatisfied.length > 0) {
+      let result = await needs.check()
+      if (result.satisfied) {
         console.error("Some needs were unsatisfied:")
-        console.log(needsToJSON(unsatisfied))
+        console.log(needsToJSON(result.unsatisfiedNeeds))
       }
     } catch (err) {
       console.error("error: ", err)
@@ -86,5 +85,7 @@ require("yargs")
       process.exit(1)
     }
   })
+  .demandCommand(1, "Please specify a command")
   .help()
+  .alias("h", "help")
   .argv
