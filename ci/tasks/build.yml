@@ -1,0 +1,13 @@
+---
+platform: linux
+
+inputs:
+- name: source
+
+run:
+  path: /bin/bash
+  args:
+  - -exc
+  - |
+    cd source
+    make build
