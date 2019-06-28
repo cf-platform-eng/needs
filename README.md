@@ -1,4 +1,4 @@
-# Besoin
+# Needs
 
 Advertising and checking the needs of a test
 
@@ -6,80 +6,51 @@ Advertising and checking the needs of a test
 
 ### List
 
-`besoin list [<needs-file>]`
+`needs list [<needs-file>]`
 
 Prints the needs file as JSON. Uses the default file path of /inputs/needs.json 
 
 ### Lint
 
-`besoin lint <needs-file>`
+`needs lint <needs-file>`
 
 Checks the needs file for consistency
 
 ### Check
 
-`besoin check [<needs-file>]`
+`needs check [<needs-file>]`
 
 Checks the system where this is running for the needs. Uses the default file path of /inputs/needs.json
 
-## Needs
+## Needs file
 
-### Platforms
-
-```
-{
-    "platforms": {
-        "pcf": {
-            "version": ">=2.3",
-            "iaas": "gcp"
-        },
-        "pks": {
-            "nodes": 3
-        }
-    }
-}
-```
+The needs file is a JSON array of need objects.
 
 ### Binaries
 
 Checks for executable files on the image. Can use absolute paths or file names, which will look for the binary in the $PATH directories.
 
-```
+```json
 {
-    "binaries": [
-        "marman",
-        "/bin/bash"
-    ]
+    "type": "binary",
+    "name": "marman"
 }
 ```
 
 ### Environment variables
 
-```
+```json
 {
-    "envs": [
-        "OM_TARGET",
-        "OM_USERNAME",
-        "OM_PASSWORD"
-    ]
+    "type": "environment_variable",
+    "name": "PRODUCT_NAME"
 }
 ```
 
 ### Files
 
-```
+```json
 {
-    "files": [
-        "/input/credentials.json"
-    ]
+    "type": "file",
+    "path": "/input/credentials.json"
 }
 ```
-
-### Hosts
-
-```
-{
-    "hosts": [ ??? ]
-}
-```
-

@@ -2,11 +2,11 @@
 
 SOURCES := $(shell ls *.js lib/*.js lib/needs/*.js)
 
-deps: node_modules/besoin_made
+deps: node_modules/.installed
 
-node_modules/besoin_made: package.json package-lock.json
+node_modules/.installed: package.json package-lock.json
 	npm install
-	touch node_modules/besoin_made
+	touch node_modules/.installed
 
 lint: $(SOURCES)
 	eslint $(SOURCES)
@@ -14,6 +14,6 @@ lint: $(SOURCES)
 test: deps lint
 	npm test
 
-build: besoin
-besoin: lint deps
+build: needs
+needs: lint deps
 	./node_modules/pkg . -t node12-macos-x64

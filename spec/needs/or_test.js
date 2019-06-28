@@ -1,43 +1,43 @@
-let And = require("../../lib/needs/and.js")
+let Or = require("../../lib/needs/or.js")
 const FakeTypes = require("../helpers/fake_types.js")
 
-describe("and", function () {
+describe("or", function () {
 
   describe("validate", function () {
     it("throws on emtpy string", function () {
       expect(function () {
-        new And("")
-      }).toThrowError(And.ValidationError, "data is not valid")
+        new Or("")
+      }).toThrowError(Or.ValidationError, "data is not valid")
     })
 
     it("throws on emtpy object", function () {
       expect(function () {
-        new And({})
-      }).toThrowError(And.ValidationError, "data is not valid")
+        new Or({})
+      }).toThrowError(Or.ValidationError, "data is not valid")
     })
 
     it("throws on invalid type", function () {
       expect(function () {
-        new And({
+        new Or({
           "type": "the-wrong-type",
           "needs": []
         })
-      }).toThrowError(And.ValidationError, "data is not valid")
+      }).toThrowError(Or.ValidationError, "data is not valid")
     })
 
     it("throws on invalid needs", function () {
       expect(function () {
-        new And({
-          "type": "and",
+        new Or({
+          "type": "or",
           "needs": "pete"
         })
-      }).toThrowError(And.ValidationError, "data is not valid")
+      }).toThrowError(Or.ValidationError, "data is not valid")
     })
 
     it("works on empty needs list", function () {
       expect(function () {
-        new And({
-          "type": "and",
+        new Or({
+          "type": "or",
           "needs": []
         })
       }).not.toThrow()
@@ -45,8 +45,8 @@ describe("and", function () {
 
     it("works on valid input", function () {
       expect(function () {
-        new And({
-          "type": "and",
+        new Or({
+          "type": "or",
           "needs": [{
             "type": "always_happy"
           }]
@@ -58,8 +58,8 @@ describe("and", function () {
   describe("check", function () {
     describe("empty needs list", function () {
       it("returns true", async function () {
-        let need = new And({
-          "type": "and",
+        let need = new Or({
+          "type": "or",
           "needs": []
         }, new FakeTypes())
         
@@ -68,8 +68,8 @@ describe("and", function () {
 
       describe("satisfied needs list", function () {
         it("returns true", async function () {
-          let need = new And({
-            "type": "and",
+          let need = new Or({
+            "type": "or",
             "needs": [
               { "type": "always_happy" },
               { "type": "always_happy" },
@@ -83,9 +83,9 @@ describe("and", function () {
       })
 
       describe("single unsatisfied need", function () {
-        it("returns false", async function () {
-          let need = new And({
-            "type": "and",
+        it("returns true", async function () {
+          let need = new Or({
+            "type": "or",
             "needs": [
               { "type": "always_happy" },
               { "type": "always_sad" },
@@ -94,14 +94,29 @@ describe("and", function () {
             ]
           }, new FakeTypes())
 
-          await expectAsync(need.check()).toBeResolvedTo({ need, satisfied: false, unsatisfiedNeeds: [ need.needs[1] ] })
+          await expectAsync(need.check()).toBeResolvedTo({ need, satisfied: true, unsatisfiedNeeds: [ need.needs[1] ] })
+        })
+      })
+
+      describe("all unsatisfied needs", function () {
+        it("returns false", async function () {
+          let need = new Or({
+            "type": "or",
+            "needs": [
+              { "type": "always_sad" },
+              { "type": "always_sad" },
+              { "type": "always_sad" }
+            ]
+          }, new FakeTypes())
+
+          await expectAsync(need.check()).toBeResolvedTo({ need, satisfied: false, unsatisfiedNeeds: need.needs })
         })
       })
 
       describe("single broken need", function () {
         it("returns false", async function () {
-          let need = new And({
-            "type": "and",
+          let need = new Or({
+            "type": "or",
             "needs": [
               { "type": "always_happy" },
               { "type": "always_sad" },
@@ -122,13 +137,13 @@ describe("and", function () {
 
   describe("info", function () {
     it("is set", function () {
-      expect(And.info).toBeDefined()
+      expect(Or.info).toBeDefined()
     })
   })
 
   describe("name", function () {
     it("is set", function () {
-      expect(And.type).toBe("and")
+      expect(Or.type).toBe("or")
     })
   })
 })

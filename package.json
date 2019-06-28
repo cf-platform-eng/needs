@@ -1,8 +1,8 @@
 {
-  "name": "besoin",
-  "version": "0.0.1",
+  "name": "needs",
+  "version": "0.1.0",
   "description": "",
-  "main": "besoin.js",
+  "main": "needs.js",
   "scripts": {
     "test": "jasmine"
   },
@@ -20,7 +20,7 @@
     "pkg": "^4.4.0"
   },
   "bin": {
-    "besoin": "./besoin.js"
+    "needs": "./needs.js"
   },
   "pkg": {
     "scripts": "lib/**/*.js"
