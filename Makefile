@@ -16,4 +16,4 @@ test: deps lint
 
 build: needs
 needs: lint deps
-	./node_modules/pkg . -t node12-macos-x64
+	npm run build

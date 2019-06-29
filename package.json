@@ -4,6 +4,7 @@
   "description": "",
   "main": "needs.js",
   "scripts": {
+    "build": "pkg . -t node12-macos-x64",
     "test": "jasmine"
   },
   "author": "Pete Wall",
