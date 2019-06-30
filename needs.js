@@ -5,11 +5,9 @@ const path = require("path")
 const { promisify } = require("util")
 const readFile = promisify(fs.readFile)
 
-const defaultNeedsFile = path.join(__dirname, "needs.json")
-
-const And = require("./lib/needs/and.js")
 const Types = require("./lib/types.js")
 const types = new Types()
+const And = types.get("and")
 
 function needsToJSON(needs) {
   return JSON.stringify(needs.map((need) => need.data))
@@ -30,10 +28,12 @@ async function loadNeedsFromFile(file) {
 }
 
 require("yargs")
-  .option("file", {
+  .option("f", {
+    alias: "file",
+    default: path.join(process.cwd(), "needs.json"),
+    demandOption: true,
     type: "string",
     normalize: true,
-    default: defaultNeedsFile,
   })
   .command("list", "list needs", (yargs) => {
     return yargs.option("unsatisfied", {
@@ -61,12 +61,13 @@ require("yargs")
 
     try {
       let result = await needs.check()
-      if (result.satisfied) {
+      if (!result.satisfied) {
         console.error("Some needs were unsatisfied:")
         console.log(needsToJSON(result.unsatisfiedNeeds))
+        process.exit(1)
       }
     } catch (err) {
-      console.error("error: ", err)
+      console.error("Failed to check needs: ", err)
       process.exit(1)
     }
   })

@@ -31,19 +31,31 @@ The needs file is a JSON array of need objects.
 Checks for executable files on the image. Can use absolute paths or file names, which will look for the binary in the $PATH directories.
 
 ```json
-{
+[{
     "type": "binary",
     "name": "marman"
-}
+}, {
+    "type": "binary",
+    "path": "/usr/local/bin/om"
+}]
 ```
 
 ### Environment variables
 
+Checks for defined environment variables. Can use a single `name` or multiple `names`.
+
 ```json
-{
+[{
     "type": "environment_variable",
     "name": "PRODUCT_NAME"
-}
+}, {
+    "type": "environment_variable",
+    "names": [
+        "OM_TARGET",
+        "OM_USERNAME",
+        "OM_PASSWORD"
+    ]
+}]
 ```
 
 ### Files

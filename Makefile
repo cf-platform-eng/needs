@@ -14,6 +14,9 @@ lint: $(SOURCES)
 test: deps lint
 	npm test
 
+test-features: build
+	npm run feature-test
+
 build: needs
 needs: lint deps
 	npm run build

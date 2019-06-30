@@ -5,7 +5,8 @@
   "main": "needs.js",
   "scripts": {
     "build": "pkg . -t node12-macos-x64",
-    "test": "jasmine"
+    "test": "jasmine",
+    "feature-test": "cucumber-js"
   },
   "author": "Pete Wall",
   "dependencies": {
@@ -17,6 +18,7 @@
     "yargs": "^13.2.4"
   },
   "devDependencies": {
+    "cucumber": "^5.1.0",
     "jasmine": "^3.4.0",
     "pkg": "^4.4.0"
   },
