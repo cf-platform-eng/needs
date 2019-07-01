@@ -24,4 +24,4 @@ clean:
 build: build/needs-linux build/needs-macos
 build/needs-linux build/needs-macos: lint deps
 	mkdir -p build
-	pkg . --targets latest-linux-x64,latest-macos-x64 --out-path ./build
+	npm run build

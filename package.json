@@ -4,6 +4,7 @@
   "description": "",
   "main": "needs.js",
   "scripts": {
+    "build": "pkg . --targets latest-linux-x64,latest-macos-x64 --out-path ./build",
     "test": "jasmine",
     "feature-test": "cucumber-js"
   },
