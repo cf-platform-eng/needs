@@ -4,6 +4,10 @@ platform: linux
 inputs:
   - name: source
 
+outputs:
+  - name: build
+    path: source/build
+
 caches:
   - path: source/node_modules
 
