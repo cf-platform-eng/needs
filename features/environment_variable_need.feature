@@ -1,5 +1,4 @@
 Feature: Environment variable needs
-
   Scenario: Environment variable defined
     Given a needs file that checks for an environment variable
     And that environment variable is defined
@@ -12,4 +11,3 @@ Feature: Environment variable needs
     When I check the needs
     Then the needs check fails
     And outputs the unsatisfied need
-
