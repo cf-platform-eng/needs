@@ -1,5 +1,4 @@
-const assert = require("assert")
-const { Given, Then } = require("cucumber")
+const { Given } = require("cucumber")
 const fs = require("fs").promises
 const path = require("path")
 
