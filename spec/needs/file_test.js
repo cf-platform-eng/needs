@@ -38,10 +38,16 @@ describe("file", function () {
       it("returns false", async function () {
         let need = new File({
           "type": "file",
-          "path": "/this/file/does/not/exist"
+          "path": "/path/to/a/file",
+        })
+
+        spyOn(need, "glob")
+        need.glob.and.callFake((path, callback) => {
+          callback(null, [])
         })
 
         await expectAsync(need.check()).toBeResolvedTo({ need, satisfied: false })
+        expect(need.glob).toHaveBeenCalledWith("/path/to/a/file",  jasmine.any(Function))
       })
     })
 
@@ -49,26 +55,32 @@ describe("file", function () {
       it("returns an error", async function () {
         let need = new File({
           "type": "file",
-          "path": "file-path"
+          "path": "/path/to/a/file",
         })
 
-        spyOn(need.fs, "access")
-        need.fs.access.and.callFake((path, callback) => {
+        spyOn(need, "glob")
+        need.glob.and.callFake((path, callback) => {
           callback("some-other-error")
         })
 
         await expectAsync(need.check()).toBeRejected()
-        expect(need.fs.access).toHaveBeenCalledWith("file-path",  jasmine.any(Function))
+        expect(need.glob).toHaveBeenCalledWith("/path/to/a/file",  jasmine.any(Function))
       })
     })
 
     it("returns true if the file is present", async function () {
       let need = new File({
         "type": "file",
-        "path": __filename
+        "path": "/path/to/a/file",
+      })
+
+      spyOn(need, "glob")
+      need.glob.and.callFake((path, callback) => {
+        callback(null, ["/path/to/a/file"])
       })
 
       await expectAsync(need.check()).toBeResolvedTo({ need, satisfied: true })
+      expect(need.glob).toHaveBeenCalledWith("/path/to/a/file",  jasmine.any(Function))
     })
   })
 

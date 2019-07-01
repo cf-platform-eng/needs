@@ -61,8 +61,11 @@ Checks for defined environment variables. Can use a single `name` or multiple `n
 ### Files
 
 ```json
-{
+[{
     "type": "file",
     "path": "/input/credentials.json"
-}
+}, {
+    "type": "file",
+    "path": "/input/*.pivotal"
+}]
 ```
