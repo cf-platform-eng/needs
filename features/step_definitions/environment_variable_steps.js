@@ -1,8 +1,6 @@
 const assert = require("assert")
 const { Before, After, Given, When, Then } = require("cucumber")
-// const util = require("util")
-// const exec = util.promisify(require("child_process").exec);
-const { exec, spawn } = require("child_process")
+const { exec } = require("child_process")
 const fs = require("fs").promises
 const path = require("path")
 

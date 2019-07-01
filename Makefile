@@ -14,9 +14,14 @@ lint: $(SOURCES)
 test: deps lint
 	npm test
 
-test-features: build
+test-features: lint deps
 	npm run feature-test
 
-build: needs
-needs: lint deps
-	npm run build
+clean:
+	rm -rf build
+	rm -rf node_modules
+
+build: build/needs-linux build/needs-macos
+build/needs-linux build/needs-macos: lint deps
+	mkdir -p build
+	pkg . --targets latest-linux-x64,latest-macos-x64 --out-path ./build
