@@ -12,7 +12,10 @@ caches:
   - path: source/node_modules
 
 run:
-  dir: source
-  path: /usr/bin/make
+  path: /bin/bash
   args:
-    - build
+    - -exc
+    - |
+      cp version/version source
+      cd source
+      make build

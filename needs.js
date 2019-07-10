@@ -27,67 +27,78 @@ async function loadNeedsFromFile(file) {
   }
 }
 
-require("yargs")
-  .option("f", {
-    alias: "file",
-    default: path.join(process.cwd(), "needs.json"),
-    demandOption: true,
-    type: "string",
-    normalize: true,
-  })
-  .command("list", "list needs", (yargs) => {
-    return yargs.option("unsatisfied", {
-      type: "boolean",
-      describe: "only list unsatisfied needs"
+async function loadVersion() {
+  let rawVersion = await readFile(path.join(__dirname, "version"))
+  return rawVersion.toString()
+}
+
+async function run() {
+  let version = await loadVersion()
+
+  require("yargs")
+    .option("f", {
+      alias: "file",
+      default: path.join(process.cwd(), "needs.json"),
+      demandOption: true,
+      type: "string",
+      normalize: true,
     })
-  }, async (args) => {
-    let needs = await loadNeedsFromFile(args.file)
+    .command("list", "list needs", (yargs) => {
+      return yargs.option("unsatisfied", {
+        type: "boolean",
+        describe: "only list unsatisfied needs"
+      })
+    }, async (args) => {
+      let needs = await loadNeedsFromFile(args.file)
 
-    if (!args.unsatisfied) {
-      console.log(needsToJSON(needs.needs))
-      return
-    }
+      if (!args.unsatisfied) {
+        console.log(needsToJSON(needs.needs))
+        return
+      }
 
-    try {
-      let result = await needs.check()
-      console.log(needsToJSON(result.unsatisfiedNeeds))
-    } catch (err) {
-      console.error("error: ", err)
-      process.exit(1)
-    }
-  })
-  .command("check", "check current needs", yargs => yargs, async (args) => {
-    let needs = await loadNeedsFromFile(args.file)
-
-    try {
-      let result = await needs.check()
-      if (!result.satisfied) {
-        console.error("Some needs were unsatisfied:")
+      try {
+        let result = await needs.check()
         console.log(needsToJSON(result.unsatisfiedNeeds))
+      } catch (err) {
+        console.error("error: ", err)
         process.exit(1)
       }
-    } catch (err) {
-      console.error("Failed to check needs: ", err)
-      process.exit(1)
-    }
-  })
-  .command("types", "list installed types", () => {
-    types.all().sort().forEach((type) => {
-      console.log(type)
     })
-  })
-  .command("type", "get info for a given type", (args) => {
-    let typeName = args.argv._[1]
-    if (types.has(typeName)) {
-      let type = types.get(args.argv._[1])
-      console.log(type.info)
-    } else {
-      console.error(`Type "${typeName}" does not exist`)
-      process.exit(1)
-    }
-  })
-  .demandCommand(1, "Please specify a command")
-  .strict(true)
-  .help()
-  .alias("h", "help")
-  .argv
+    .command("check", "check current needs", yargs => yargs, async (args) => {
+      let needs = await loadNeedsFromFile(args.file)
+
+      try {
+        let result = await needs.check()
+        if (!result.satisfied) {
+          console.error("Some needs were unsatisfied:")
+          console.log(needsToJSON(result.unsatisfiedNeeds))
+          process.exit(1)
+        }
+      } catch (err) {
+        console.error("Failed to check needs: ", err)
+        process.exit(1)
+      }
+    })
+    .command("types", "list installed types", () => {
+      types.all().sort().forEach((type) => {
+        console.log(type)
+      })
+    })
+    .command("type", "get info for a given type", (args) => {
+      let typeName = args.argv._[1]
+      if (types.has(typeName)) {
+        let type = types.get(args.argv._[1])
+        console.log(type.info)
+      } else {
+        console.error(`Type "${typeName}" does not exist`)
+        process.exit(1)
+      }
+    })
+    .demandCommand(1, "Please specify a command")
+    .strict(true)
+    .version(version)
+    .help()
+    .alias("h", "help")
+    .argv
+}
+run()

@@ -27,6 +27,7 @@
     "needs": "./needs.js"
   },
   "pkg": {
+    "assets": "version",
     "scripts": "lib/**/*.js"
   }
 }
