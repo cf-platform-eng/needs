@@ -87,6 +87,7 @@ require("yargs")
     }
   })
   .demandCommand(1, "Please specify a command")
+  .strict(true)
   .help()
   .alias("h", "help")
   .argv
