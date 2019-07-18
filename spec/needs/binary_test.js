@@ -8,13 +8,13 @@ describe("binary", function () {
     it("throws on emtpy string", function () {
       expect(function () {
         new Binary("")
-      }).toThrowError(Binary.ValidationError, "data is not valid")
+      }).toThrowError(Binary.ValidationError, "data for type \"binary\" is not valid")
     })
 
     it("throws on emtpy object", function () {
       expect(function () {
         new Binary({})
-      }).toThrowError(Binary.ValidationError, "data is not valid")
+      }).toThrowError(Binary.ValidationError, "data for type \"binary\" is not valid")
     })
 
     it("throws on invalid type", function () {
@@ -23,7 +23,7 @@ describe("binary", function () {
           "type": "the-wrong-type",
           "path": "pete"
         })
-      }).toThrowError(Binary.ValidationError, "data is not valid")
+      }).toThrowError(Binary.ValidationError, "data for type \"binary\" is not valid")
     })
 
     it("throws on missing path or name", function () {
@@ -31,7 +31,7 @@ describe("binary", function () {
         new Binary({
           "type": "binary"
         })
-      }).toThrowError(Binary.ValidationError, "data is not valid")
+      }).toThrowError(Binary.ValidationError, "data for type \"binary\" is not valid")
     })
 
     it("returns true on valid path input", function () {
@@ -59,7 +59,7 @@ describe("binary", function () {
           "name": "my-binary",
           "path": "/a/path/to/a/file"
         })
-      }).toThrowError(Binary.ValidationError, "data is not valid")
+      }).toThrowError(Binary.ValidationError, "data for type \"binary\" is not valid")
     })
   })
 

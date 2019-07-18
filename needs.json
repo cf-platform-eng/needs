@@ -3,7 +3,7 @@
     "name": "PIVNET_TOKEN"
 }, {
     "type": "file",
-    "path": "/Users/pwall/src/petewall/needs/needs.json"
+    "path": "/Users/pwall/src/cf-platform-eng/needs/needs.json"
 }, {
     "type": "file",
     "path": "/this/file/does/not/exist"

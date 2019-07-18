@@ -6,13 +6,13 @@ describe("environment_variable", function () {
     it("throws on emtpy string", function () {
       expect(function () {
         new EnvironmentVariable("")
-      }).toThrowError(EnvironmentVariable.ValidationError, "data is not valid")
+      }).toThrowError(EnvironmentVariable.ValidationError, "data for type \"environment_variable\" is not valid")
     })
 
     it("throws on emtpy object", function () {
       expect(function () {
         new EnvironmentVariable({})
-      }).toThrowError(EnvironmentVariable.ValidationError, "data is not valid")
+      }).toThrowError(EnvironmentVariable.ValidationError, "data for type \"environment_variable\" is not valid")
     })
 
     it("throws on invalid type", function () {
@@ -21,7 +21,7 @@ describe("environment_variable", function () {
           "type": "the-wrong-type",
           "name": "pete"
         })
-      }).toThrowError(EnvironmentVariable.ValidationError, "data is not valid")
+      }).toThrowError(EnvironmentVariable.ValidationError, "data for type \"environment_variable\" is not valid")
     })
 
     it("throws on invalid environment variable", function () {
@@ -30,7 +30,7 @@ describe("environment_variable", function () {
           "type": "environment_variable",
           "name": "this is = wrong"
         })
-      }).toThrowError(EnvironmentVariable.ValidationError, "data is not valid")
+      }).toThrowError(EnvironmentVariable.ValidationError, "data for type \"environment_variable\" is not valid")
     })
 
     it("works on valid name", function () {
@@ -48,7 +48,7 @@ describe("environment_variable", function () {
           "type": "environment_variable",
           "names": []
         })
-      }).toThrowError(EnvironmentVariable.ValidationError, "data is not valid")
+      }).toThrowError(EnvironmentVariable.ValidationError, "data for type \"environment_variable\" is not valid")
     })
 
     it("throws on invalid names", function () {
@@ -57,7 +57,7 @@ describe("environment_variable", function () {
           "type": "environment_variable",
           "names": "what is this, some kind of string?"
         })
-      }).toThrowError(EnvironmentVariable.ValidationError, "data is not valid")
+      }).toThrowError(EnvironmentVariable.ValidationError, "data for type \"environment_variable\" is not valid")
     })
 
     it("works on valid names", function () {

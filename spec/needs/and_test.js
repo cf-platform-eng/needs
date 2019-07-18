@@ -7,13 +7,13 @@ describe("and", function () {
     it("throws on emtpy string", function () {
       expect(function () {
         new And("")
-      }).toThrowError(And.ValidationError, "data is not valid")
+      }).toThrowError(And.ValidationError, "data for type \"and\" is not valid")
     })
 
     it("throws on emtpy object", function () {
       expect(function () {
         new And({})
-      }).toThrowError(And.ValidationError, "data is not valid")
+      }).toThrowError(And.ValidationError, "data for type \"and\" is not valid")
     })
 
     it("throws on invalid type", function () {
@@ -22,7 +22,7 @@ describe("and", function () {
           "type": "the-wrong-type",
           "needs": []
         })
-      }).toThrowError(And.ValidationError, "data is not valid")
+      }).toThrowError(And.ValidationError, "data for type \"and\" is not valid")
     })
 
     it("throws on invalid needs", function () {
@@ -31,7 +31,7 @@ describe("and", function () {
           "type": "and",
           "needs": "pete"
         })
-      }).toThrowError(And.ValidationError, "data is not valid")
+      }).toThrowError(And.ValidationError, "data for type \"and\" is not valid")
     })
 
     it("works on empty needs list", function () {
@@ -63,7 +63,7 @@ describe("and", function () {
           "needs": []
         }, new FakeTypes())
         
-        await expectAsync(need.check()).toBeResolvedTo({ need, satisfied: true, unsatisfiedNeeds: [] })
+        await expectAsync(need.check()).toBeResolvedTo({ need, satisfied: true, satisfiedNeeds: [], unsatisfiedNeeds: [] })
       })
 
       describe("satisfied needs list", function () {
@@ -78,7 +78,7 @@ describe("and", function () {
             ]
           }, new FakeTypes())
           
-          await expectAsync(need.check()).toBeResolvedTo({ need, satisfied: true, unsatisfiedNeeds: [] })
+          await expectAsync(need.check()).toBeResolvedTo({ need, satisfied: true, satisfiedNeeds: need.needs, unsatisfiedNeeds: [] })
         })
       })
 
@@ -94,7 +94,12 @@ describe("and", function () {
             ]
           }, new FakeTypes())
 
-          await expectAsync(need.check()).toBeResolvedTo({ need, satisfied: false, unsatisfiedNeeds: [ need.needs[1] ] })
+          await expectAsync(need.check()).toBeResolvedTo({
+            need,
+            satisfied: false,
+            satisfiedNeeds: [ need.needs[0], need.needs[2], need.needs[3]],
+            unsatisfiedNeeds: [ need.needs[1] ]
+          })
         })
       })
 

@@ -5,13 +5,13 @@ describe("file", function () {
     it("throws on emtpy string", function () {
       expect(function () {
         new File("")
-      }).toThrowError(File.ValidationError, "data is not valid")
+      }).toThrowError(File.ValidationError, "data for type \"file\" is not valid")
     })
 
     it("throws on emtpy object", function () {
       expect(function () {
         new File({})
-      }).toThrowError(File.ValidationError, "data is not valid")
+      }).toThrowError(File.ValidationError, "data for type \"file\" is not valid")
     })
 
     it("throws on invalid type", function () {
@@ -20,7 +20,7 @@ describe("file", function () {
           "type": "the-wrong-type",
           "path": "pete"
         })
-      }).toThrowError(File.ValidationError, "data is not valid")
+      }).toThrowError(File.ValidationError, "data for type \"file\" is not valid")
     })
 
     it("returns true on valid input", function () {

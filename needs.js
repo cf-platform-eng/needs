@@ -22,7 +22,16 @@ async function loadNeedsFromFile(file) {
       needs: data
     }, types)
   } catch (err) {
-    console.error(err)
+    if (err.code == "ENOENT") {
+      console.error("Needs file not found. Please try again with the \"--file\" option.")
+    } else if (err.name == "SyntaxError") {
+      console.error("Needs file was invalid: Invalid JSON")
+    } else if (err.name == "ValidationError") {
+      console.error(`Needs file was invalid: ${err.message}`)
+      console.error("  Details:", err.details)
+    } else {
+      console.error(err)
+    }
     process.exit(1)
   }
 }
@@ -43,37 +52,39 @@ async function run() {
       type: "string",
       normalize: true,
     })
-    .command("list", "list needs", (yargs) => {
-      return yargs.option("unsatisfied", {
-        type: "boolean",
-        describe: "only list unsatisfied needs"
-      })
-    }, async (args) => {
-      let needs = await loadNeedsFromFile(args.file)
-
-      if (!args.unsatisfied) {
-        console.log(needsToJSON(needs.needs))
-        return
-      }
-
-      try {
-        let result = await needs.check()
-        console.log(needsToJSON(result.unsatisfiedNeeds))
-      } catch (err) {
-        console.error("error: ", err)
-        process.exit(1)
-      }
+    .command("list", "list needs", async (args) => {
+      let needs = await loadNeedsFromFile(args.argv.file)
+      console.log(needsToJSON(needs.needs))
     })
-    .command("check", "check current needs", yargs => yargs, async (args) => {
-      let needs = await loadNeedsFromFile(args.file)
+    .command("check", "check current needs", (yargs) => {
+      return yargs
+        .option("satisfied", {
+          type: "boolean",
+          describe: "only list satisfied needs"
+        })
+        .option("unsatisfied", {
+          type: "boolean",
+          describe: "only list unsatisfied needs"
+        })
+    }, async (argv) => {
+      // console.log("args: ", argv)
+      let needs = await loadNeedsFromFile(argv.file)
 
       try {
         let result = await needs.check()
         if (!result.satisfied) {
           console.error("Some needs were unsatisfied:")
-          console.log(needsToJSON(result.unsatisfiedNeeds))
-          process.exit(1)
         }
+
+        if (argv.satisfied) {
+          console.log(needsToJSON(result.satisfiedNeeds))
+        } else if (argv.unsatisfied) {
+          console.log(needsToJSON(result.unsatisfiedNeeds))
+        } else {
+          console.log(needsToJSON(needs.needs))
+        }
+
+        process.exit(result.satisfied ? 0 : 1)
       } catch (err) {
         console.error("Failed to check needs: ", err)
         process.exit(1)
