@@ -91,15 +91,16 @@ async function run() {
           console.error("Some needs were unsatisfied:")
         }
 
+        let unsatisfied = result.getUnsatisfiedNeeds()
         if (argv.satisfied) {
           console.log(needsToJSON(result.getSatisfiedNeeds()))
         } else if (argv.unsatisfied) {
-          console.log(needsToJSON(result.getUnsatisfiedNeeds()))
+          console.log(needsToJSON(unsatisfied))
         } else {
           console.log(needsToJSON(needs.needs))
         }
 
-        process.exit(result.satisfied ? 0 : 1)
+        process.exit(unsatisfied.length)
       } catch (err) {
         console.error("Failed to check needs: ", err)
         process.exit(1)
