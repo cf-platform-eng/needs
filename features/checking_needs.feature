@@ -25,7 +25,7 @@ Feature: Checking needs
     And a need is unsatisfied
     When I check the needs
     Then the needs check fails
-    And I see all of the needs
+    And I see all of the needs showing the unsatisfied need
 
   Scenario: Unsatisfied needs file with --satisfied
     Given a needs file

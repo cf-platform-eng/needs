@@ -1,14 +1,14 @@
 let Need = require("../../../lib/needs/need.js")
 class AlwaysHappy extends Need {
-  constructor(input) {
-    super({}, input)
+  constructor() {
+    super({}, {
+      type: AlwaysHappy.type
+    })
   }
 
   check() {
-    return Promise.resolve({
-      need: this,
-      satisfied: true
-    })
+    this.satisfied = true
+    return Promise.resolve(this)
   }
 }
 

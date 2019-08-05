@@ -92,12 +92,14 @@ describe("environment_variable", function () {
 
     it("returns false if the environment variable is not set", async function () {
       delete process.env.MY_ENVIRONMENT_VARIABLE
-      await expectAsync(need.check()).toBeResolvedTo({ need, satisfied: false })
+      await expectAsync(need.check()).toBeResolvedTo(need)
+      expect(need.satisfied).toBe(false)
     })
 
     it("returns true if the environment variable is set", async function () {
       process.env.MY_ENVIRONMENT_VARIABLE = "set"
-      await expectAsync(need.check()).toBeResolvedTo({ need, satisfied: true })
+      await expectAsync(need.check()).toBeResolvedTo(need)
+      expect(need.satisfied).toBe(true)
     })
   })
 
@@ -106,18 +108,30 @@ describe("environment_variable", function () {
     let need = new EnvironmentVariable({
       "type": "environment_variable",
       "names": [
-        "MY_ENVIRONMENT_VARIABLE"
+        "MY_ENVIRONMENT_VARIABLE_1",
+        "MY_ENVIRONMENT_VARIABLE_2"
       ]
     })
 
-    it("returns false if the environment variable is not set", async function () {
-      delete process.env.MY_ENVIRONMENT_VARIABLE
-      await expectAsync(need.check()).toBeResolvedTo({ need, satisfied: false })
+    it("returns false if no environment variables are set", async function () {
+      delete process.env.MY_ENVIRONMENT_VARIABLE_1
+      delete process.env.MY_ENVIRONMENT_VARIABLE_2
+      await expectAsync(need.check()).toBeResolvedTo(need)
+      expect(need.satisfied).toBe(false)
     })
 
-    it("returns true if the environment variable is set", async function () {
-      process.env.MY_ENVIRONMENT_VARIABLE = "set"
-      await expectAsync(need.check()).toBeResolvedTo({ need, satisfied: true })
+    it("returns false if not all environment variables are set", async function () {
+      process.env.MY_ENVIRONMENT_VARIABLE_1 = "set"
+      delete process.env.MY_ENVIRONMENT_VARIABLE_2
+      await expectAsync(need.check()).toBeResolvedTo(need)
+      expect(need.satisfied).toBe(false)
+    })
+
+    it("returns true if all environment variables are set", async function () {
+      process.env.MY_ENVIRONMENT_VARIABLE_1 = "set"
+      process.env.MY_ENVIRONMENT_VARIABLE_2 = "set"
+      await expectAsync(need.check()).toBeResolvedTo(need)
+      expect(need.satisfied).toBe(true)
     })
   })
 

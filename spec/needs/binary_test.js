@@ -72,7 +72,8 @@ describe("binary", function () {
             "path": "/this/binary/does/not/exist"
           })
 
-          await expectAsync(need.check()).toBeResolvedTo({ need, satisfied: false})
+          await expectAsync(need.check()).toBeResolvedTo(need)
+          expect(need.satisfied).toBe(false)
         })
       })
       
@@ -99,7 +100,8 @@ describe("binary", function () {
             "path": binaryPath
           })
     
-          await expectAsync(need.check()).toBeResolvedTo({ need, satisfied: false})
+          await expectAsync(need.check()).toBeResolvedTo(need)
+          expect(need.satisfied).toBe(false)
         })
       })
 
@@ -135,7 +137,8 @@ describe("binary", function () {
             "path": binaryPath
           })
 
-          await expectAsync(need.check()).toBeResolvedTo({ need, satisfied: false})
+          await expectAsync(need.check()).toBeResolvedTo(need)
+          expect(need.satisfied).toBe(false)
         })
       })
 
@@ -163,7 +166,8 @@ describe("binary", function () {
             "path": "/bin/bash"
           })
 
-          await expectAsync(need.check()).toBeResolvedTo({ need, satisfied: true})
+          await expectAsync(need.check()).toBeResolvedTo(need)
+          expect(need.satisfied).toBe(true)
         })
       })
     })
@@ -176,7 +180,8 @@ describe("binary", function () {
             "name": "this-binary-does-not-exist"
           })
 
-          await expectAsync(need.check()).toBeResolvedTo({ need, satisfied: false})
+          await expectAsync(need.check()).toBeResolvedTo(need)
+          expect(need.satisfied).toBe(false)
         })
       })
 
@@ -204,7 +209,8 @@ describe("binary", function () {
             "name": "node"
           })
 
-          await expectAsync(need.check()).toBeResolvedTo({ need, satisfied: true})
+          await expectAsync(need.check()).toBeResolvedTo(need)
+          expect(need.satisfied).toBe(true)    
         })
       })
     })

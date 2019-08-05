@@ -63,7 +63,10 @@ describe("and", function () {
           "needs": []
         }, new FakeTypes())
         
-        await expectAsync(need.check()).toBeResolvedTo({ need, satisfied: true, satisfiedNeeds: [], unsatisfiedNeeds: [] })
+        await expectAsync(need.check()).toBeResolvedTo(need)
+        expect(need.satisfied).toBe(true)
+        expect(need.getSatisfiedNeeds()).toEqual([])
+        expect(need.getUnsatisfiedNeeds()).toEqual([])
       })
 
       describe("satisfied needs list", function () {
@@ -78,7 +81,14 @@ describe("and", function () {
             ]
           }, new FakeTypes())
           
-          await expectAsync(need.check()).toBeResolvedTo({ need, satisfied: true, satisfiedNeeds: need.needs, unsatisfiedNeeds: [] })
+          await expectAsync(need.check()).toBeResolvedTo(need)
+          expect(need.satisfied).toBe(true)
+          expect(need.getSatisfiedNeeds()).toEqual(need.needs)
+          expect(need.getUnsatisfiedNeeds()).toEqual([])
+          expect(need.needs[0].satisfied).toBe(true)
+          expect(need.needs[1].satisfied).toBe(true)
+          expect(need.needs[2].satisfied).toBe(true)
+          expect(need.needs[3].satisfied).toBe(true)
         })
       })
 
@@ -94,12 +104,14 @@ describe("and", function () {
             ]
           }, new FakeTypes())
 
-          await expectAsync(need.check()).toBeResolvedTo({
-            need,
-            satisfied: false,
-            satisfiedNeeds: [ need.needs[0], need.needs[2], need.needs[3]],
-            unsatisfiedNeeds: [ need.needs[1] ]
-          })
+          await expectAsync(need.check()).toBeResolvedTo(need)
+          expect(need.satisfied).toBe(false)
+          expect(need.getSatisfiedNeeds()).toEqual([ need.needs[0], need.needs[2], need.needs[3]])
+          expect(need.getUnsatisfiedNeeds()).toEqual([ need.needs[1] ])
+          expect(need.needs[0].satisfied).toBe(true)
+          expect(need.needs[1].satisfied).toBe(false)
+          expect(need.needs[2].satisfied).toBe(true)
+          expect(need.needs[3].satisfied).toBe(true)
         })
       })
 

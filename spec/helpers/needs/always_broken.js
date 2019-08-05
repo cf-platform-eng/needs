@@ -1,7 +1,9 @@
 let Need = require("../../../lib/needs/need.js")
 class AlwaysBroken extends Need {
-  constructor(input) {
-    super({}, input)
+  constructor() {
+    super({}, {
+      type: AlwaysBroken.type
+    })
   }
 
   check() {
