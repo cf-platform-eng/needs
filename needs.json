@@ -5,8 +5,16 @@
     "type": "file",
     "path": "/Users/pwall/src/cf-platform-eng/needs/needs.json"
 }, {
-    "type": "file",
-    "path": "/this/file/does/not/exist"
+    "type": "or",
+    "needs": [
+        {
+            "type": "file",
+            "path": "/this/file/does/not/exist"
+        }, {
+            "type": "file",
+            "path": "*.json"
+        }
+    ]
 }, {
     "type": "binary",
     "name": "om"

@@ -11,7 +11,7 @@ const types = new Types()
 const And = types.get("and")
 
 function needsToJSON(needs) {
-  return JSON.stringify(needs.map((need) => need.data))
+  return JSON.stringify(needs)
 }
 
 async function loadNeedsFromFile(file) {
@@ -92,9 +92,9 @@ async function run() {
         }
 
         if (argv.satisfied) {
-          console.log(needsToJSON(result.satisfiedNeeds))
+          console.log(needsToJSON(result.getSatisfiedNeeds()))
         } else if (argv.unsatisfied) {
-          console.log(needsToJSON(result.unsatisfiedNeeds))
+          console.log(needsToJSON(result.getUnsatisfiedNeeds()))
         } else {
           console.log(needsToJSON(needs.needs))
         }

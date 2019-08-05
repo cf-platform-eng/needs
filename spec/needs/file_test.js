@@ -46,7 +46,8 @@ describe("file", function () {
           callback(null, [])
         })
 
-        await expectAsync(need.check()).toBeResolvedTo({ need, satisfied: false })
+        await expectAsync(need.check()).toBeResolvedTo(need)
+        expect(need.satisfied).toBe(false)  
         expect(need.glob).toHaveBeenCalledWith("/path/to/a/file",  jasmine.any(Function))
       })
     })
@@ -79,7 +80,8 @@ describe("file", function () {
         callback(null, ["/path/to/a/file"])
       })
 
-      await expectAsync(need.check()).toBeResolvedTo({ need, satisfied: true })
+      await expectAsync(need.check()).toBeResolvedTo(need)
+      expect(need.satisfied).toBe(true)
       expect(need.glob).toHaveBeenCalledWith("/path/to/a/file",  jasmine.any(Function))
     })
   })
