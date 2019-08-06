@@ -66,27 +66,31 @@ async function run() {
         require("debug").enable("*")
       }
     })
-    .command("list", "list needs", async (args) => {
+    .command("list", "List and validate needs in the needs file", async (args) => {
       debug("Listing needs...")
       let needs = await loadNeedsFromFile(args.argv.file)
       console.log(needsToJSON(needs.needs))
     })
-    .command("check", "check current needs", (yargs) => {
+    .command("check", "Check if the needs are satisfied", (yargs) => {
       return yargs
         .option("satisfied", {
           type: "boolean",
-          describe: "only list satisfied needs"
+          describe: "Only list satisfied needs"
         })
         .option("unsatisfied", {
           type: "boolean",
-          describe: "only list unsatisfied needs"
+          describe: "Only list unsatisfied needs"
+        })
+        .option("identify", {
+          type: "boolean",
+          describe: "Identify the satisfied needs with \"identify\" fields"
         })
     }, async (argv) => {
       debug("Checking needs...")
       let needs = await loadNeedsFromFile(argv.file)
 
       try {
-        let result = await needs.check()
+        let result = await needs.check(argv.identify)
         if (!result.satisfied) {
           console.error("Some needs were unsatisfied:")
         }
@@ -106,13 +110,13 @@ async function run() {
         process.exit(1)
       }
     })
-    .command("types", "list installed types", () => {
+    .command("types", "List available need types", () => {
       debug("Listing need types...")
       types.all().sort().forEach((type) => {
         console.log(type)
       })
     })
-    .command("type", "get info for a given type", (args) => {
+    .command("type", "Get info for a given type", (args) => {
       let typeName = args.argv._[1]
       debug(`Getting info for need type "${typeName}...`)
       if (types.has(typeName)) {

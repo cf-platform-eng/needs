@@ -27,6 +27,11 @@ Given("that binary exists, but it is not executable", async function () {
   await fs.writeFile(this.exampleFile, "hi")
 })
 
+Given("that path exists, but it is not a file", async function () {
+  this.exampleDir = path.join(this.tmpDir, "my-test-binary")
+  await fs.mkdir(this.exampleDir)
+})
+
 Given("that binary exists", async function () {
   this.exampleFile = path.join(this.tmpDir, "my-test-binary")
   await fs.writeFile(this.exampleFile, "hi")

@@ -34,6 +34,10 @@ Shows information about the need type.
 
 The needs file is a JSON array of need objects. By default, needs looks in `./needs.json` for the needs file, but it can be set by using the `-f|--flag` argument.
 
+### identify field
+
+Each need can define an `identify` field. When a `needs check` is run, if the need is satisfied, the contents of the `identify` field will be executed and the result on stdout will be stored into the `identity` field.
+
 ### Binaries
 
 Checks for executable files on the image. Can use absolute paths or file names, which will look for the binary in the $PATH directories.

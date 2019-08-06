@@ -3,31 +3,15 @@ const { Before, After, Given, When, Then } = require("cucumber")
 const { exec } = require("child_process")
 const fs = require("fs").promises
 const path = require("path")
+const util = require("util")
+const rimraf = util.promisify(require("rimraf"))
 
 Before(async function () {
   this.tmpDir = await fs.mkdtemp("needs-features-")
 })
 
 After(async function () {
-  if (this.needsFile) {
-    await fs.unlink(this.needsFile).catch(err => {
-      if (err.code != "ENOENT") {
-        assert.fail("Did not expect this to fail")
-        console.log(err)
-      }
-    })
-  }
-  if (this.exampleFile) {
-    await fs.unlink(this.exampleFile).catch(err => {
-      if (err.code != "ENOENT") {
-        assert.fail("Did not expect this to fail")
-        console.log(err)
-      }
-    })
-  }
-  if (this.tmpDir) {
-    await fs.rmdir(this.tmpDir)
-  }
+  await rimraf(this.tmpDir)
 })
 
 Given("no needs file", async function () {
@@ -64,6 +48,17 @@ Given("a needs file with invalid data", async function () {
 
 When("I check the needs", function (done) {
   this.needsProcess = exec(`./needs.js check --file ${this.needsFile}`, {
+    env: process.env
+  }, (err, stdout, stderr) => {
+    this.needsReturnCode = err ? err.code : 0
+    this.stdout = stdout.trim()
+    this.stderr = stderr.trim()
+    done()
+  })
+})
+
+When("I check the needs with --identify", function (done) {
+  this.needsProcess = exec(`./needs.js check --file ${this.needsFile} --identify`, {
     env: process.env
   }, (err, stdout, stderr) => {
     this.needsReturnCode = err ? err.code : 0

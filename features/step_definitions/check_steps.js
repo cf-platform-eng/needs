@@ -6,6 +6,11 @@ Given("the needs are satisfied", function () {
   process.env.MY_ENVIRONMENT_VARIABLE_2 = "set"
 })
 
+Given("the needs are not satisfied", function () {
+  delete process.env.MY_ENVIRONMENT_VARIABLE_1
+  delete process.env.MY_ENVIRONMENT_VARIABLE_2
+})
+
 Given("a need is unsatisfied", function () {
   process.env.MY_ENVIRONMENT_VARIABLE_1 = "set"
   delete process.env.MY_ENVIRONMENT_VARIABLE_2
