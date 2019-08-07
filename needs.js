@@ -116,7 +116,7 @@ async function run() {
         console.log(type)
       })
     })
-    .command("type", "Get info for a given type", (args) => {
+    .command("type", "Describe a given type", (args) => {
       let typeName = args.argv._[1]
       debug(`Getting info for need type "${typeName}...`)
       if (types.has(typeName)) {

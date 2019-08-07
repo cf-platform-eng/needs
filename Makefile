@@ -21,7 +21,10 @@ clean:
 	rm -rf build
 	rm -rf node_modules
 
-build: build/needs-linux build/needs-macos
-build/needs-linux build/needs-macos: lint deps
+build: lint deps build/needs-linux build/needs-macos
+build/needs-linux build/needs-macos:
 	mkdir -p build
 	npm run build
+
+build-image: build
+	docker build --tag cfplatformeng/needs:$(shell cat version) --file Dockerfile .
