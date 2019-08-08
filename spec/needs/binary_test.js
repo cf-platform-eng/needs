@@ -76,69 +76,19 @@ describe("binary", function () {
           expect(need.satisfied).toBe(false)
         })
       })
-      
-      describe("binary path is not a file", function () {
-        let binaryPath = ""
-        beforeEach(function (done) {
-          fs.mkdtemp("binary-test-temp", async (err, directory) => {
-            expect(err).toBeNull()
-            binaryPath = directory
-            done()
-          })
-        })
-
-        afterEach(function (done) {
-          fs.rmdir(binaryPath, (err) => {
-            expect(err).toBeNull()
-            done()
-          })
-        })
-        
-        it("returns false", async function () {
-          let need = new Binary({
-            "type": "binary",
-            "path": binaryPath
-          })
-    
-          await expectAsync(need.check()).toBeResolvedTo(need)
-          expect(need.satisfied).toBe(false)
-        })
-      })
 
       describe("binary path is not executable", function () {
-        let dir = ""
-        let binaryPath = ""
-        beforeEach(function (done) {
-          fs.mkdtemp("binary-test-temp", async (err, directory) => {
-            expect(err).toBeNull()
-            dir = directory
-
-            binaryPath = path.join(dir, "test-binary")
-            fs.writeFile(binaryPath, "touched", (err) => {
-              expect(err).toBeNull()
-            })
-            done()
-          })
-        })
-
-        afterEach(function (done) {
-          fs.unlink(binaryPath, (err) => {
-            expect(err).toBeNull()
-            fs.rmdir(dir, (err) => {
-              expect(err).toBeNull()
-              done()
-            })  
-          })
-        })
-
         it("returns false", async function () {
           let need = new Binary({
             "type": "binary",
-            "path": binaryPath
+            "path": "/some/file/path"
           })
+
+          spyOn(need, "isExecutable").and.callFake(() => Promise.resolve(false))
 
           await expectAsync(need.check()).toBeResolvedTo(need)
           expect(need.satisfied).toBe(false)
+          expect(need.isExecutable).toHaveBeenCalledWith("/some/file/path")
         })
       })
 
@@ -149,13 +99,10 @@ describe("binary", function () {
             "path": "/some/file/path"
           })
 
-          spyOn(need, "isExecutable")
-          need.isExecutable.and.callFake((path, callback) => {
-            callback("some-other-error")
-          })
+          spyOn(need, "isExecutable").and.callFake(() => Promise.reject("some-other-error"))
   
           await expectAsync(need.check()).toBeRejected()
-          expect(need.isExecutable).toHaveBeenCalledWith("/some/file/path",  jasmine.any(Function))
+          expect(need.isExecutable).toHaveBeenCalledWith("/some/file/path")
         })
       })
 
@@ -163,11 +110,14 @@ describe("binary", function () {
         it("returns true", async function () {
           let need = new Binary({
             "type": "binary",
-            "path": "/bin/bash"
+            "path": "/some/file/path"
           })
+
+          spyOn(need, "isExecutable").and.callFake(() => Promise.resolve(true))
 
           await expectAsync(need.check()).toBeResolvedTo(need)
           expect(need.satisfied).toBe(true)
+          expect(need.isExecutable).toHaveBeenCalledWith("/some/file/path")
         })
       })
     })
@@ -180,8 +130,11 @@ describe("binary", function () {
             "name": "this-binary-does-not-exist"
           })
 
+          spyOn(need, "which").and.callFake(() => Promise.reject({code: "ENOENT"}))
+
           await expectAsync(need.check()).toBeResolvedTo(need)
           expect(need.satisfied).toBe(false)
+          expect(need.which).toHaveBeenCalledWith("this-binary-does-not-exist")
         })
       })
 
@@ -189,16 +142,13 @@ describe("binary", function () {
         it("returns an error", async function () {
           let need = new Binary({
             "type": "binary",
-            "name": "some-binary"
+            "name": "this-binary-fails"
           })
 
-          spyOn(need, "which")
-          need.which.and.callFake((path, callback) => {
-            callback("some-other-error")
-          })
+          spyOn(need, "which").and.callFake(() => Promise.reject("some-other-error"))
   
           await expectAsync(need.check()).toBeRejected()
-          expect(need.which).toHaveBeenCalledWith("some-binary",  jasmine.any(Function))
+          expect(need.which).toHaveBeenCalledWith("this-binary-fails")
         })
       })
 
@@ -206,11 +156,14 @@ describe("binary", function () {
         it("returns true", async function () {
           let need = new Binary({
             "type": "binary",
-            "name": "node"
+            "name": "this-binary-exists"
           })
 
+          spyOn(need, "which").and.callFake(() => Promise.resolve(["/path/to/this-binary-exists"]))
+
           await expectAsync(need.check()).toBeResolvedTo(need)
-          expect(need.satisfied).toBe(true)    
+          expect(need.satisfied).toBe(true)
+          expect(need.which).toHaveBeenCalledWith("this-binary-exists")
         })
       })
     })

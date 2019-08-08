@@ -12,6 +12,13 @@ Feature: Binary needs
     Then the needs check fails
     And outputs the unsatisfied need
 
+  Scenario: Binary path exists, but is not a file
+    Given a needs file that checks for a binary using a path
+    And that path exists, but it is not a file
+    When I check the needs
+    Then the needs check fails
+    And outputs the unsatisfied need
+
   Scenario: Binary path does not exist
     Given a needs file that checks for a binary using a path
     And that binary does not exist

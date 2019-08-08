@@ -41,14 +41,11 @@ describe("file", function () {
           "path": "/path/to/a/file",
         })
 
-        spyOn(need, "glob")
-        need.glob.and.callFake((path, callback) => {
-          callback(null, [])
-        })
+        spyOn(need, "glob").and.callFake(() => Promise.resolve([]))
 
         await expectAsync(need.check()).toBeResolvedTo(need)
         expect(need.satisfied).toBe(false)  
-        expect(need.glob).toHaveBeenCalledWith("/path/to/a/file",  jasmine.any(Function))
+        expect(need.glob).toHaveBeenCalledWith("/path/to/a/file")
       })
     })
 
@@ -59,13 +56,10 @@ describe("file", function () {
           "path": "/path/to/a/file",
         })
 
-        spyOn(need, "glob")
-        need.glob.and.callFake((path, callback) => {
-          callback("some-other-error")
-        })
+        spyOn(need, "glob").and.callFake(() => Promise.reject("some-other-error"))
 
         await expectAsync(need.check()).toBeRejected()
-        expect(need.glob).toHaveBeenCalledWith("/path/to/a/file",  jasmine.any(Function))
+        expect(need.glob).toHaveBeenCalledWith("/path/to/a/file")
       })
     })
 
@@ -75,14 +69,11 @@ describe("file", function () {
         "path": "/path/to/a/file",
       })
 
-      spyOn(need, "glob")
-      need.glob.and.callFake((path, callback) => {
-        callback(null, ["/path/to/a/file"])
-      })
+      spyOn(need, "glob").and.callFake(() => Promise.resolve(["/path/to/a/file"]))
 
       await expectAsync(need.check()).toBeResolvedTo(need)
       expect(need.satisfied).toBe(true)
-      expect(need.glob).toHaveBeenCalledWith("/path/to/a/file",  jasmine.any(Function))
+      expect(need.glob).toHaveBeenCalledWith("/path/to/a/file")
     })
   })
 

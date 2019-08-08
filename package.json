@@ -23,7 +23,8 @@
   "devDependencies": {
     "cucumber": "^5.1.0",
     "jasmine": "^3.4.0",
-    "pkg": "^4.4.0"
+    "pkg": "^4.4.0",
+    "rimraf": "^2.6.3"
   },
   "bin": {
     "needs": "./needs.js"

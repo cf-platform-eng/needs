@@ -1,24 +1,13 @@
 [{
     "type": "environment_variable",
-    "name": "PIVNET_TOKEN"
+    "name": "MY_VAR",
+    "identify": "echo $MY_VAR"
 }, {
     "type": "file",
-    "path": "/Users/pwall/src/cf-platform-eng/needs/needs.json"
-}, {
-    "type": "or",
-    "needs": [
-        {
-            "type": "file",
-            "path": "/this/file/does/not/exist"
-        }, {
-            "type": "file",
-            "path": "*.json"
-        }
-    ]
+    "path": "/Users/pwall/src/cf-platform-eng/needs/needs.json",
+    "identify": "shasum /Users/pwall/src/cf-platform-eng/needs/needs.json"
 }, {
     "type": "binary",
-    "name": "om"
-}, {
-    "type": "binary",
-    "path": "/bin/bash"
+    "name": "om",
+    "identify": "om version"
 }]
