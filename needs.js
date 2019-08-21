@@ -11,7 +11,7 @@ const types = new Types()
 const And = types.get("and")
 
 function needsToJSON(needs) {
-  return JSON.stringify(needs)
+  return JSON.stringify(needs, null, 2)
 }
 
 async function loadNeedsFromFile(file) {
