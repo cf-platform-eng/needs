@@ -8,8 +8,8 @@ node_modules/.installed: package.json package-lock.json
 	npm install
 	touch node_modules/.installed
 
-lint: $(SOURCES)
-	eslint $(SOURCES)
+lint: node_modules/.installed $(SOURCES)
+	./node_modules/.bin/eslint $(SOURCES)
 
 test: deps lint
 	npm test
