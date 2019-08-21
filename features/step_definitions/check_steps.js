@@ -21,17 +21,17 @@ Then("I don't see any needs", function () {
 })
 
 Then("I see the satisfied need", function () {
-  assert.equal(this.stdout, "[{\"type\":\"environment_variable\",\"names\":[\"MY_ENVIRONMENT_VARIABLE_1\"],\"satisfied\":true}]")
+  assert.equal(this.stdout, JSON.stringify([{"type":"environment_variable","names":["MY_ENVIRONMENT_VARIABLE_1"],"satisfied":true}], null, 2))
 })
 
 Then("I see the unsatisfied need", function () {
-  assert.equal(this.stdout, "[{\"type\":\"environment_variable\",\"names\":[\"MY_ENVIRONMENT_VARIABLE_2\"],\"satisfied\":false}]")
+  assert.equal(this.stdout, JSON.stringify([{"type":"environment_variable","names":["MY_ENVIRONMENT_VARIABLE_2"],"satisfied":false}], null, 2))
 })
 
 Then("I see all of the needs", function () {
-  assert.equal(this.stdout, "[{\"type\":\"environment_variable\",\"names\":[\"MY_ENVIRONMENT_VARIABLE_1\"],\"satisfied\":true},{\"type\":\"environment_variable\",\"names\":[\"MY_ENVIRONMENT_VARIABLE_2\"],\"satisfied\":true}]")
+  assert.equal(this.stdout, JSON.stringify([{"type":"environment_variable","names":["MY_ENVIRONMENT_VARIABLE_1"],"satisfied":true},{"type":"environment_variable","names":["MY_ENVIRONMENT_VARIABLE_2"],"satisfied":true}], null, 2))
 })
 
 Then("I see all of the needs showing the unsatisfied need", function () {
-  assert.equal(this.stdout, "[{\"type\":\"environment_variable\",\"names\":[\"MY_ENVIRONMENT_VARIABLE_1\"],\"satisfied\":true},{\"type\":\"environment_variable\",\"names\":[\"MY_ENVIRONMENT_VARIABLE_2\"],\"satisfied\":false}]")
+  assert.equal(this.stdout, JSON.stringify([{"type":"environment_variable","names":["MY_ENVIRONMENT_VARIABLE_1"],"satisfied":true},{"type":"environment_variable","names":["MY_ENVIRONMENT_VARIABLE_2"],"satisfied":false}], null, 2))
 })
