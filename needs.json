@@ -9,5 +9,6 @@
 }, {
     "type": "binary",
     "name": "om",
-    "identify": "om version"
+    "identify": "om version",
+    "description": "Ensure we have the latest version"
 }]

@@ -34,9 +34,13 @@ Shows information about the need type.
 
 The needs file is a JSON array of need objects. By default, needs looks in `./needs.json` for the needs file, but it can be set by using the `-f|--flag` argument.
 
-### identify field
+### `identify` field
 
-Each need can define an `identify` field. When a `needs check` is run, if the need is satisfied, the contents of the `identify` field will be executed and the result on stdout will be stored into the `identity` field.
+Each need can define an `identify` field with a `string` value. When a `needs check` is run, if the need is satisfied, the contents of the `identify` field will be executed and the result on stdout will be stored into the `identity` field.
+
+### `description` field
+
+Each need can define a `description` field with a `string` value. This field may be used to show why a need is important. However, the `description` itself is not used to determine if the need is satisfied.
 
 ### Binaries
 
@@ -48,7 +52,8 @@ Checks for executable files on the image. Can use absolute paths or file names, 
     "name": "marman"
 }, {
     "type": "binary",
-    "path": "/usr/local/bin/om"
+    "path": "/usr/local/bin/om",
+    "identify": `mv /usr/local/bin/om /workspace/bin`
 }]
 ```
 
@@ -75,7 +80,8 @@ Checks for defined environment variables. Can use a single `name` or multiple `n
 ```json
 [{
     "type": "file",
-    "path": "/input/credentials.json"
+    "path": "/input/credentials.json",
+    "description": "Fetched from LastPass note 'credentials.json'"
 }, {
     "type": "file",
     "path": "/input/*.pivotal"
