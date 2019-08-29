@@ -1,9 +1,7 @@
 let Need = require("../../../lib/needs/need.js")
 class AlwaysSad extends Need {
-  constructor() {
-    super({}, {
-      type: AlwaysSad.type
-    })
+  constructor(input) {
+    super({}, input)
   }
 
   check() {
@@ -12,6 +10,6 @@ class AlwaysSad extends Need {
   }
 }
 
-AlwaysSad.type = "alwasy_sad"
+AlwaysSad.type = "always_sad"
 AlwaysSad.info = ""
 module.exports = AlwaysSad

@@ -14,6 +14,6 @@ class AlwaysBroken extends Need {
   }
 }
 
-AlwaysBroken.type = "alwasy_broken"
+AlwaysBroken.type = "always_broken"
 AlwaysBroken.info = ""
 module.exports = AlwaysBroken

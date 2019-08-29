@@ -13,6 +13,6 @@ Feature: Description
 
   Scenario: Using `list` with an incorrect description
     Given a needs file with an incorrect description field
-    When I check the needs
-    Then the needs check fails
+    When I list the needs
+    Then the needs list fails
 

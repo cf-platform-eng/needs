@@ -6,12 +6,15 @@ class AlwaysHappy extends Need {
     })
   }
 
-  check() {
+  check(andIdentify) {
     this.satisfied = true
+    if (andIdentify) {
+      this.identity = "identified!"
+    }
     return Promise.resolve(this)
   }
 }
 
-AlwaysHappy.type = "alwasy_happy"
+AlwaysHappy.type = "always_happy"
 AlwaysHappy.info = ""
 module.exports = AlwaysHappy

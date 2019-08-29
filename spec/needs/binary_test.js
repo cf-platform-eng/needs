@@ -34,7 +34,7 @@ describe("binary", function () {
       }).toThrowError(Binary.ValidationError, "data for type \"binary\" is not valid")
     })
 
-    it("returns true on valid path input", function () {
+    it("works on valid path input", function () {
       expect(function () {
         new Binary({
           "type": "binary",
@@ -43,7 +43,7 @@ describe("binary", function () {
       }).not.toThrow()
     })
 
-    it("returns true on valid name input", function () {
+    it("works on valid name input", function () {
       expect(function () {
         new Binary({
           "type": "binary",
@@ -60,6 +60,36 @@ describe("binary", function () {
           "path": "/a/path/to/a/file"
         })
       }).toThrowError(Binary.ValidationError, "data for type \"binary\" is not valid")
+    })
+
+    it("works with the description field", function () {
+      expect(function () {
+        new Binary({
+          "type": "binary",
+          "name": "my-binary",
+          "description": "This is my description"
+        })
+      }).not.toThrow()
+    })
+
+    it("works with the identify field", function () {
+      expect(function () {
+        new Binary({
+          "type": "binary",
+          "name": "my-binary",
+          "identify": "echo \"Hello World\""
+        })
+      }).not.toThrow()
+    })
+
+    it("works with the optional field", function () {
+      expect(function () {
+        new Binary({
+          "type": "binary",
+          "name": "my-binary",
+          "optional": true
+        })
+      }).not.toThrow()
     })
   })
 

@@ -9,7 +9,7 @@ node_modules/.installed: package.json package-lock.json
 	touch node_modules/.installed
 
 lint: node_modules/.installed $(SOURCES)
-	./node_modules/.bin/eslint $(SOURCES)
+	npm run lint
 
 test: deps lint
 	npm test

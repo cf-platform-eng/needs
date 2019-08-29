@@ -1,4 +1,4 @@
-let Or = require("../../lib/needs/or.js")
+const Or = require("../../lib/needs/or.js")
 const FakeTypes = require("../helpers/fake_types.js")
 
 describe("or", function () {
@@ -50,6 +50,42 @@ describe("or", function () {
           "needs": [{
             "type": "always_happy"
           }]
+        }, new FakeTypes())
+      }).not.toThrow()
+    })
+
+    it("works with the description field", function () {
+      expect(function () {
+        new Or({
+          "type": "or",
+          "needs": [{
+            "type": "always_happy"
+          }],
+          "description": "This is my description"
+        }, new FakeTypes())
+      }).not.toThrow()
+    })
+
+    it("works with the identify field", function () {
+      expect(function () {
+        new Or({
+          "type": "or",
+          "needs": [{
+            "type": "always_happy"
+          }],
+          "identify": "echo \"Hello World\""
+        }, new FakeTypes())
+      }).not.toThrow()
+    })
+
+    it("works with the optional field", function () {
+      expect(function () {
+        new Or({
+          "type": "or",
+          "needs": [{
+            "type": "always_happy"
+          }],
+          "optional": true
         }, new FakeTypes())
       }).not.toThrow()
     })

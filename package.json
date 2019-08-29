@@ -7,6 +7,7 @@
   "main": "needs.js",
   "scripts": {
     "build": "pkg . --targets latest-linux-x64,latest-macos-x64 --out-path ./build",
+    "lint": "eslint .",
     "test": "jasmine",
     "feature-test": "cucumber-js"
   },
@@ -23,6 +24,7 @@
   "devDependencies": {
     "cucumber": "^5.1.0",
     "eslint": "^6.2.1",
+    "eslint-plugin-jasmine": "^2.10.1",
     "jasmine": "^3.4.0",
     "pkg": "^4.4.0",
     "rimraf": "^2.6.3"

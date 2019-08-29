@@ -42,43 +42,32 @@ describe("environment_variable", function () {
       }).not.toThrow()
     })
 
-    it("throws on empty names", function () {
+    it("works with the description field", function () {
       expect(function () {
         new EnvironmentVariable({
           "type": "environment_variable",
-          "names": []
-        })
-      }).toThrowError(EnvironmentVariable.ValidationError, "data for type \"environment_variable\" is not valid")
-    })
-
-    it("throws on invalid names", function () {
-      expect(function () {
-        new EnvironmentVariable({
-          "type": "environment_variable",
-          "names": "what is this, some kind of string?"
-        })
-      }).toThrowError(EnvironmentVariable.ValidationError, "data for type \"environment_variable\" is not valid")
-    })
-
-    it("works on valid names", function () {
-      expect(function () {
-        new EnvironmentVariable({
-          "type": "environment_variable",
-          "names": [
-            "PIVNET_TOKEN"
-          ]
+          "name": "PIVNET_TOKEN",
+          "description": "This is my description"
         })
       }).not.toThrow()
     })
 
-    it("works on valid name and names", function () {
+    it("works with the identify field", function () {
       expect(function () {
         new EnvironmentVariable({
           "type": "environment_variable",
-          "name": "PRODUCT_NAME",
-          "names": [
-            "PIVNET_TOKEN"
-          ]
+          "name": "PIVNET_TOKEN",
+          "identify": "echo \"Hello World\""
+        })
+      }).not.toThrow()
+    })
+
+    it("works with the optional field", function () {
+      expect(function () {
+        new EnvironmentVariable({
+          "type": "environment_variable",
+          "name": "PIVNET_TOKEN",
+          "optional": true
         })
       }).not.toThrow()
     })
@@ -98,38 +87,6 @@ describe("environment_variable", function () {
 
     it("returns true if the environment variable is set", async function () {
       process.env.MY_ENVIRONMENT_VARIABLE = "set"
-      await expectAsync(need.check()).toBeResolvedTo(need)
-      expect(need.satisfied).toBe(true)
-    })
-  })
-
-
-  describe("check with names", function () {
-    let need = new EnvironmentVariable({
-      "type": "environment_variable",
-      "names": [
-        "MY_ENVIRONMENT_VARIABLE_1",
-        "MY_ENVIRONMENT_VARIABLE_2"
-      ]
-    })
-
-    it("returns false if no environment variables are set", async function () {
-      delete process.env.MY_ENVIRONMENT_VARIABLE_1
-      delete process.env.MY_ENVIRONMENT_VARIABLE_2
-      await expectAsync(need.check()).toBeResolvedTo(need)
-      expect(need.satisfied).toBe(false)
-    })
-
-    it("returns false if not all environment variables are set", async function () {
-      process.env.MY_ENVIRONMENT_VARIABLE_1 = "set"
-      delete process.env.MY_ENVIRONMENT_VARIABLE_2
-      await expectAsync(need.check()).toBeResolvedTo(need)
-      expect(need.satisfied).toBe(false)
-    })
-
-    it("returns true if all environment variables are set", async function () {
-      process.env.MY_ENVIRONMENT_VARIABLE_1 = "set"
-      process.env.MY_ENVIRONMENT_VARIABLE_2 = "set"
       await expectAsync(need.check()).toBeResolvedTo(need)
       expect(need.satisfied).toBe(true)
     })

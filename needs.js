@@ -9,10 +9,7 @@ const readFile = promisify(fs.readFile)
 const Types = require("./lib/types.js")
 const types = new Types()
 const And = types.get("and")
-
-function needsToJSON(needs) {
-  return JSON.stringify(needs, null, 2)
-}
+const check = require("./cmd/check.js")
 
 async function loadNeedsFromFile(file) {
   debug(`Loading needs file "${file}..."`)
@@ -69,7 +66,7 @@ async function run() {
     .command("list", "List and validate needs in the needs file", async (args) => {
       debug("Listing needs...")
       let needs = await loadNeedsFromFile(args.argv.file)
-      console.log(needsToJSON(needs.needs))
+      console.log(JSON.stringify(needs.needs, null, 2))
     })
     .command("check", "Check if the needs are satisfied", (yargs) => {
       return yargs
@@ -90,21 +87,7 @@ async function run() {
       let needs = await loadNeedsFromFile(argv.file)
 
       try {
-        let result = await needs.check(argv.identify)
-        if (!result.satisfied) {
-          console.error("Some needs were unsatisfied:")
-        }
-
-        let unsatisfied = result.getUnsatisfiedNeeds()
-        if (argv.satisfied) {
-          console.log(needsToJSON(result.getSatisfiedNeeds()))
-        } else if (argv.unsatisfied) {
-          console.log(needsToJSON(unsatisfied))
-        } else {
-          console.log(needsToJSON(needs.needs))
-        }
-
-        process.exit(unsatisfied.length)
+        process.exit(await check(needs, argv))
       } catch (err) {
         console.error("Failed to check needs: ", err)
         process.exit(1)

@@ -31,6 +31,36 @@ describe("file", function () {
         })
       }).not.toThrow()
     })
+
+    it("works with the description field", function () {
+      expect(function () {
+        new File({
+          "type": "file",
+          "path": "/a/path/to/a/file",
+          "description": "This is my description"
+        })
+      }).not.toThrow()
+    })
+
+    it("works with the identify field", function () {
+      expect(function () {
+        new File({
+          "type": "file",
+          "path": "/a/path/to/a/file",
+          "identify": "echo \"Hello World\""
+        })
+      }).not.toThrow()
+    })
+
+    it("works with the optional field", function () {
+      expect(function () {
+        new File({
+          "type": "file",
+          "path": "/a/path/to/a/file",
+          "optional": true
+        })
+      }).not.toThrow()
+    })
   })
 
   describe("check", function () {

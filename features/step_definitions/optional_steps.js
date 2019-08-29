@@ -3,17 +3,17 @@ const { Given, Then } = require("cucumber")
 const fs = require("fs").promises
 const path = require("path")
 
-Given("a needs file with a description field", async function () {
+Given("a needs file with an optional need", async function () {
   let data = [{
     "type": "environment_variable",
     "name": "MY_ENVIRONMENT_VARIABLE_1",
-    "description": "some description"
+    "optional": true
   }]
   this.needsFile = path.join(this.tmpDir, "needs.json")
   await fs.writeFile(this.needsFile, JSON.stringify(data))
 })
 
-Given("a needs file with an incorrect description field", async function () {
+Given("a needs file with an incorrect optional need", async function () {
   let data = [{
     "type": "environment_variable",
     "name": "MY_ENVIRONMENT_VARIABLE_1",
@@ -23,7 +23,10 @@ Given("a needs file with an incorrect description field", async function () {
   await fs.writeFile(this.needsFile, JSON.stringify(data))
 })
 
-Then("I see the description in the output", async function () {
-  description_regex = /"some description"/
-  assert(this.stdout.match(description_regex).length > 0)
+Then("I see the optional need in the output", function () {
+  assert.equal(this.stdout, JSON.stringify([{"type":"environment_variable","optional":true,"name":"MY_ENVIRONMENT_VARIABLE_1"}], null, 2))
+})
+
+Then("I see the unsatisfied optional need in the output", function () {
+  assert.equal(this.stdout, JSON.stringify([{"type":"environment_variable","optional":true,"name":"MY_ENVIRONMENT_VARIABLE_1","satisfied":false}], null, 2))
 })
