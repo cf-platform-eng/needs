@@ -4,9 +4,11 @@ Needs provides a way to advertise and check required inputs in a structured way.
 
 ## History
 
-My team runs lots of tests. Long tests. And it's very aggrevating when the tests fail one hour in because an input file was missing or an environment variable was not set. Needs came about because we wanted to validate that all of the inputs are ready to go at the beginning of the test.
+My team runs lots of tests. Long tests. And it's very aggravating when the tests fail one hour in because an input file was missing or an environment variable was not set. Needs came about because we wanted to validate that all of the inputs are ready to go at the beginning of the test.
 
-Now, a lot of our test (which a often Docker images) look like this:
+## Why needs
+
+With Needs, a lot of our tests (which a often Docker images) look like this:
 
 ```Dockerfile
 FROM ubuntu:xenial
@@ -14,6 +16,14 @@ COPY --from=cfplatformeng/needs:latest /usr/local/bin/needs /usr/local/bin/
 COPY "needs.json" .
 CMD ["/bin/bash", "-c", "needs check && ... start long running test..."]
 ```
+
+This also lets us list the needs of any test before running:
+
+```bash
+docker run -it cfplatformeng/my-big-test needs list
+```
+
+which helps in pulling together all of the requirements for the test. Finally, since the output is structured (and validated via schema by Needs), we can hook this into automation that will automatically provision the inputs based on what the test needs.
 
 ## Commands
 
