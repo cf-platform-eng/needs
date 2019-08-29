@@ -39,7 +39,7 @@ Prints the needs file as JSON. This also validates the contents of the needs fil
 
 Checks the system where this is running for the needs. This returns 0 if all needs were satisfied, or non-zero if at least one need was unsatisfied.
 
-This prints the full list of needs, with each need adding a `satisfied` field. The CLI flags `--satisfied` and `--unsatisfied` can be used to filter the needs for only those needs.
+This also prints the full list of needs, with each need adding a `satisfied` field. The CLI flags `--satisfied` and `--unsatisfied` can be used to filter the needs for only those needs.
 
 ### Types
 
@@ -55,7 +55,7 @@ Shows information about the need type.
 
 ## Needs file
 
-The needs file is a JSON array of need objects. By default, needs looks in `./needs.json` for the needs file, but it can be set by using the `-f|--flag` argument.
+The needs file is a JSON array of need objects. By default, needs looks for a file named `needs.json` in the working directory, but it can be set by using the `-f|--flag` argument.
 
 ### `description` field
 
@@ -63,9 +63,9 @@ Each need can define a `description` field with a `string` value. This field may
 
 ### `identify` field
 
-Each need can define an `identify` field with a `string` value. When a `needs check` is run, if the need is satisfied, the contents of the `identify` field will be executed and the result on stdout will be stored into the `identity` field.
+Each need can define an `identify` field with a `string` value. When a `needs check` is run, if the need is satisfied, the contents of the `identify` field will be executed and the result on stdout will be stored into the `identity` field. This is useful for logging information about that need
 
-#### `identify` xample
+#### `identify` example
 
 ```bash
 $ cat needs.json
@@ -73,6 +73,10 @@ $ cat needs.json
     "type": "file",
     "path": "/input/secrets.json"
     "identify": "shasum /input/secrets.json"
+}, {
+    "type": "binary",
+    "name": "curl",
+    "identify": "curl --version | head -n 1"
 }]
 $ needs check
 [
@@ -82,13 +86,19 @@ $ needs check
     "satisfied": true,
     "identify": "shasum /input/secrets.json",
     "identity": "6d173b8b1190b6e3ef275848c6f61ac63da039dd658e70fd642283fdb7b73350 /input/secrets.json"
+  }, {
+    "type": "binary",
+    "name": "curl"
+    "satisfied": true,
+    "identify": "curl --version | head -n 1",
+    "identity": "curl 7.54.0 (x86_64-apple-darwin18.0) libcurl/7.54.0 LibreSSL/2.6.5 zlib/1.2.11 nghttp2/1.24.1"
   }
 ]
 ```
 
 ### `optional` field
 
-If a need has the `optional` field set to true, then even if it is unsatisfied, a call to `needs check` will not return non-zero because of that need. This is useful to advertising and checking optional inputs, but not blocking if they're not present.
+If a need has the `optional` field set to true, then even if it is unsatisfied, a call to `needs check` will not return non-zero because of that need. This is useful for advertising and checking optional inputs, but not blocking if they're not present.
 
 #### `optional` example
 
