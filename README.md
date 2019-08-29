@@ -37,7 +37,7 @@ Prints the needs file as JSON. This also validates the contents of the needs fil
 
 `needs check [-f <needs-file>]`
 
-Checks the system where this is running for the needs. This returns the number of unsatisfied needs, which means a return value of 0 means all needs were satisfied.
+Checks the system where this is running for the needs. This returns 0 if all needs were satisfied, or non-zero if at least one need was unsatisfied.
 
 This prints the full list of needs, with each need adding a `satisfied` field. The CLI flags `--satisfied` and `--unsatisfied` can be used to filter the needs for only those needs.
 
