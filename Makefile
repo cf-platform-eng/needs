@@ -4,7 +4,7 @@ SOURCES := $(shell ls *.js lib/*.js lib/needs/*.js)
 
 deps: node_modules/.installed
 
-node_modules/.installed: package.json package-lock.json
+node_modules/.installed: package.json
 	npm install
 	touch node_modules/.installed
 

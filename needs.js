@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 
-const debug = require("debug")("needs")
 const fs = require("fs")
 const path = require("path")
 const { promisify } = require("util")
@@ -12,7 +11,6 @@ const And = types.get("and")
 const check = require("./cmd/check.js")
 
 async function loadNeedsFromFile(file) {
-  debug(`Loading needs file "${file}..."`)
   try {
     let raw = await readFile(file)
     let data = JSON.parse(raw)
@@ -52,19 +50,7 @@ async function run() {
       type: "string",
       normalize: true,
     })
-    .option("d", {
-      alias: "debug",
-      default: false,
-      describe: "Show more information",
-      type: "boolean"
-    })
-    .coerce("d", (enabled) => {
-      if (enabled) {
-        require("debug").enable("*")
-      }
-    })
     .command("list", "List and validate needs in the needs file", async (args) => {
-      debug("Listing needs...")
       let needs = await loadNeedsFromFile(args.argv.file)
       console.log(JSON.stringify(needs.needs, null, 2))
     })
@@ -83,7 +69,6 @@ async function run() {
           describe: "Identify the satisfied needs with \"identify\" fields"
         })
     }, async (argv) => {
-      debug("Checking needs...")
       let needs = await loadNeedsFromFile(argv.file)
 
       try {
@@ -94,14 +79,12 @@ async function run() {
       }
     })
     .command("types", "List available need types", () => {
-      debug("Listing need types...")
       types.all().sort().forEach((type) => {
         console.log(type)
       })
     })
     .command("type", "Describe a given type", (args) => {
       let typeName = args.argv._[1]
-      debug(`Getting info for need type "${typeName}...`)
       if (types.has(typeName)) {
         let type = types.get(args.argv._[1])
         console.log(type.info)
