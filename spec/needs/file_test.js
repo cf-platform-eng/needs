@@ -61,6 +61,30 @@ describe("file", function () {
         })
       }).not.toThrow()
     })
+
+    it("works with the validate.jsonschema field", function () {
+      expect(function () {
+        new File({
+          type: "file",
+          path: "/a/path/to/a/file",
+          validate: {
+            jsonschema: {}
+          }
+        })
+      }).not.toThrow()
+    })
+
+    it("throws on invalid jsonschema", function () {
+      expect(function () {
+        new File({
+          type: "file",
+          path: "/a/path/to/a/file",
+          validate: {
+            jsonschema: "this is not valid"
+          }
+        })
+      }).toThrowError(File.ValidationError, "data for type \"file\" is not valid")
+    })
   })
 
   describe("check", function () {
@@ -88,7 +112,10 @@ describe("file", function () {
 
         spyOn(need, "glob").and.callFake(() => Promise.reject("some-other-error"))
 
-        await expectAsync(need.check()).toBeRejected()
+        await expectAsync(need.check()).toBeRejectedWith({
+          need,
+          reason: "failed to check for file"
+        })
         expect(need.glob).toHaveBeenCalledWith("/path/to/a/file")
       })
     })
@@ -104,6 +131,113 @@ describe("file", function () {
       await expectAsync(need.check()).toBeResolvedTo(need)
       expect(need.satisfied).toBe(true)
       expect(need.glob).toHaveBeenCalledWith("/path/to/a/file")
+    })
+
+    describe("jsonschema", function () {
+      describe("file check is not satisfied", function () {
+        it("does not invoke the schema check", async function () {
+          let need = new File({
+            "type": "file",
+            "path": "/path/to/a/file",
+            "validate": {
+              "jsonschema": {}
+            }
+          })
+
+          spyOn(need, "glob").and.callFake(() => Promise.resolve([]))
+
+          await expectAsync(need.check()).toBeResolvedTo(need)
+          expect(need.satisfied).toBe(false)
+          expect(need.valid).toBeUndefined()
+        })
+      })
+
+      describe("file can't be read", function () {
+        it("does not invoke the schema check", async function () {
+          let need = new File({
+            "type": "file",
+            "path": "/path/to/a/file",
+            "validate": {
+              "jsonschema": {}
+            }
+          })
+
+          spyOn(need, "glob").and.callFake(() => Promise.resolve(["/path/to/a/file"]))
+          spyOn(need.fs, "readFile").and.throwError("failed to read file")
+
+          await expectAsync(need.check()).toBeRejectedWith({
+            need,
+            reason: new Error("failed to read file")
+          })
+        })
+      })
+
+      describe("file is not json", function () {
+        it("does not invoke the schema check", async function () {
+          let need = new File({
+            "type": "file",
+            "path": "/path/to/a/file",
+            "validate": {
+              "jsonschema": {}
+            }
+          })
+
+          spyOn(need, "glob").and.callFake(() => Promise.resolve(["/path/to/a/file"]))
+          spyOn(need.fs, "readFile").and.returnValue("This is just a file")
+          spyOn(need, "validator").and.callThrough()
+
+          await expectAsync(need.check()).toBeResolvedTo(need)
+          expect(need.satisfied).toBe(false)
+          expect(need.valid).toBe(false)
+          expect(need.validator).not.toHaveBeenCalled()
+        })
+      })
+
+      describe("file contents do not meet the schema", function () {
+        it("returns false", async function () {
+          let need = new File({
+            type: "file",
+            path: "/path/to/a/file",
+            validate: {
+              jsonschema: {
+                type: "string"
+              }
+            }
+          })
+
+          spyOn(need, "glob").and.callFake(() => Promise.resolve(["/path/to/a/file"]))
+          spyOn(need.fs, "readFile").and.returnValue("[1, 2, 3]")
+          spyOn(need, "validator")
+
+          await expectAsync(need.check()).toBeResolvedTo(need)
+          expect(need.satisfied).toBe(false)
+          expect(need.validator).toHaveBeenCalledWith([1, 2, 3])
+          expect(need.valid).toBe(false)
+        })
+      })
+
+      describe("file contents meets the schema", function () {
+        it("returns true", async function () {
+          let need = new File({
+            type: "file",
+            path: "/path/to/a/file",
+            validate: {
+              jsonschema: {
+                type: "array"
+              }
+            }
+          })
+
+          spyOn(need, "glob").and.callFake(() => Promise.resolve(["/path/to/a/file"]))
+          spyOn(need.fs, "readFile").and.returnValue("[1, 2, 3]")
+          spyOn(need, "validator").and.callThrough()
+
+          await expectAsync(need.check()).toBeResolvedTo(need)
+          expect(need.satisfied).toBe(true)
+          expect(need.validator).toHaveBeenCalledWith([1, 2, 3])
+          expect(need.valid).toBe(true)
+        })
+      })
     })
   })
 

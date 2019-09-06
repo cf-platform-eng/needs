@@ -5,7 +5,12 @@
 }, {
     "type": "file",
     "path": "/Users/pwall/src/cf-platform-eng/needs/needs.json",
-    "identify": "shasum /Users/pwall/src/cf-platform-eng/needs/needs.json"
+    "identify": "shasum /Users/pwall/src/cf-platform-eng/needs/needs.json",
+    "validate": {
+        "jsonschema": {
+            "type": "array"
+        }
+    }
 }, {
     "type": "binary",
     "name": "om",
