@@ -79,17 +79,23 @@ async function run() {
       }
     })
     .command("types", "List available need types", () => {
+      console.log("Supported types:")
       types.all().sort().forEach((type) => {
-        console.log(type)
+        console.log(`  ${type}`)
       })
     })
-    .command("type", "Describe a given type", (args) => {
-      let typeName = args.argv._[1]
-      if (types.has(typeName)) {
-        let type = types.get(args.argv._[1])
+    .command("type <typeName>", "Describe a given type", (yargs) => {
+      yargs.positional("typeName", {
+        describe: "The name of the type",
+        type: "string"
+      })
+    }, (args) => {
+      if (types.has(args.typeName)) {
+        let type = types.get(args.typeName)
         console.log(type.info)
       } else {
-        console.error(`Type "${typeName}" does not exist`)
+        console.error(`Type "${args.typeName}" does not exist`)
+        console.error(`Use "${args.$0} types" to get the list of installed types`)
         process.exit(1)
       }
     })
