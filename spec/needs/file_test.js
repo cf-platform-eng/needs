@@ -163,7 +163,7 @@ describe("file", function () {
           })
 
           spyOn(need, "glob").and.callFake(() => Promise.resolve(["/path/to/a/file"]))
-          spyOn(need.fs, "readFile").and.throwError("failed to read file")
+          spyOn(need, "readFile").and.throwError("failed to read file")
 
           await expectAsync(need.check()).toBeRejectedWith({
             need,
@@ -183,7 +183,7 @@ describe("file", function () {
           })
 
           spyOn(need, "glob").and.callFake(() => Promise.resolve(["/path/to/a/file"]))
-          spyOn(need.fs, "readFile").and.returnValue("This is just a file")
+          spyOn(need, "readFile").and.returnValue("This is just a file")
           spyOn(need, "validator").and.callThrough()
 
           await expectAsync(need.check()).toBeResolvedTo(need)
@@ -206,7 +206,7 @@ describe("file", function () {
           })
 
           spyOn(need, "glob").and.callFake(() => Promise.resolve(["/path/to/a/file"]))
-          spyOn(need.fs, "readFile").and.returnValue("[1, 2, 3]")
+          spyOn(need, "readFile").and.returnValue("[1, 2, 3]")
           spyOn(need, "validator")
 
           await expectAsync(need.check()).toBeResolvedTo(need)
@@ -229,7 +229,7 @@ describe("file", function () {
           })
 
           spyOn(need, "glob").and.callFake(() => Promise.resolve(["/path/to/a/file"]))
-          spyOn(need.fs, "readFile").and.returnValue("[1, 2, 3]")
+          spyOn(need, "readFile").and.returnValue("[1, 2, 3]")
           spyOn(need, "validator").and.callThrough()
 
           await expectAsync(need.check()).toBeResolvedTo(need)
