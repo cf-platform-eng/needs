@@ -1,0 +1,14 @@
+---
+platform: linux
+
+inputs:
+  - name: source
+
+caches:
+  - path: source/node_modules
+
+run:
+  dir: source
+  path: /usr/bin/npm
+  args:
+    - audit
