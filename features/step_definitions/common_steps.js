@@ -7,11 +7,13 @@ const util = require("util")
 const rimraf = util.promisify(require("rimraf"))
 
 Before(async function () {
+  this.initialPath = process.env.PATH
   this.tmpDir = await fs.mkdtemp("needs-features-")
 })
 
 After(async function () {
   await rimraf(this.tmpDir)
+  process.env.PATH = this.initialPath
 })
 
 Given("no needs file", async function () {

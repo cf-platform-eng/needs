@@ -1,19 +1,4 @@
 [{
-    "type": "environment_variable",
-    "name": "MY_VAR",
-    "identify": "echo $MY_VAR"
-}, {
-    "type": "file",
-    "path": "/Users/pwall/src/cf-platform-eng/needs/needs.json",
-    "identify": "shasum /Users/pwall/src/cf-platform-eng/needs/needs.json",
-    "validate": {
-        "jsonschema": {
-            "type": "array"
-        }
-    }
-}, {
-    "type": "binary",
-    "name": "om",
-    "identify": "om version",
-    "description": "Ensure we have the latest version"
+    "type": "ops_manager",
+    "iaas": "google"
 }]

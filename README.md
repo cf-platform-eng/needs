@@ -160,3 +160,24 @@ Checks for a non-empty environment variable.
     "path": "/input/*.tgz"
 }]
 ```
+
+
+### Ops Manager
+
+Checks for access to a Pivotal Ops Manager service. This need will automatically add the following needs:
+
+* Binary: [om](https://github.com/pivotal-cf/om) (used to check access to the Ops Manager environment)
+* Environment variable: OM_TARGET (The URL for the Ops Manager)
+* Environment variable: OM_USERNAME
+* Environment variable: OM_PASSWORD
+* Environment variable: OM_SKIP_SSL_VALIDATION (optional)
+
+If those are found, it will use [om](https://github.com/pivotal-cf/om) to communicate with the Ops Manager.
+
+An optional "iaas" filter can be added to limit which IaaS the Ops Manager should be using.
+
+```json
+[{
+    "type": "ops_manager"
+}]
+```

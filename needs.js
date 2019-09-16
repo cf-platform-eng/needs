@@ -19,11 +19,11 @@ async function loadNeedsFromFile(file) {
       needs: data
     }, types)
   } catch (err) {
-    if (err.code == "ENOENT") {
+    if (err.code === "ENOENT") {
       console.error("Needs file not found. Please try again with the \"--file\" option.")
-    } else if (err.name == "SyntaxError") {
+    } else if (err.name === "SyntaxError") {
       console.error("Needs file was invalid: Invalid JSON")
-    } else if (err.name == "ValidationError") {
+    } else if (err.name === "ValidationError") {
       console.error(`Needs file was invalid: ${err.message}`)
       console.error("  Details:", err.details)
     } else {
