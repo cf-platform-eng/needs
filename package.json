@@ -22,7 +22,7 @@
   },
   "devDependencies": {
     "cucumber": "^5.1.0",
-    "eslint": "^6.3.0",
+    "eslint": "^6.4.0",
     "eslint-plugin-jasmine": "^2.10.1",
     "jasmine": "^3.4.0",
     "pkg": "^4.4.0",
