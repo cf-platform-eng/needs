@@ -1,5 +1,6 @@
 const assert = require("assert")
 const { Given, Then } = require("cucumber")
+const { expect } = require("chai")
 const fs = require("fs").promises
 const path = require("path")
 
@@ -37,15 +38,15 @@ Then("the identity command was not called", async function () {
 
 Then("the identity field is populated", function () {
   let output = JSON.parse(this.stdout)
-  assert.equal(output[0].identity, "hello world")
+  expect(output[0].identity).to.equal("hello world")
 })
 
 Then("the identity field is not populated", function () {
   let output = JSON.parse(this.stdout)
-  assert.equal(output[0].identity, undefined)
+  expect(output[0].identity).to.be.undefined
 })
 
 Then("the identity field is populated with an error", function () {
   let output = JSON.parse(this.stdout)
-  assert.equal(output[0].identity, `Failed to run identify: Error: Command failed: touch ${this.tmpDir}/identify-called && echo "error field" >&2 && exit 1\nerror field`)
+  expect(output[0].identity).to.equal(`Failed to run identify: Error: Command failed: touch ${this.tmpDir}/identify-called && echo "error field" >&2 && exit 1\nerror field`)
 })

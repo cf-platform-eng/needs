@@ -1,6 +1,6 @@
-const assert = require("assert")
 const { Before, After, Given, When, Then } = require("cucumber")
 const { exec } = require("child_process")
+const { expect } = require("chai")
 const fs = require("fs").promises
 const path = require("path")
 const util = require("util")
@@ -104,37 +104,37 @@ When("I list the needs", function (done) {
 })
 
 Then("the needs check passes", function () {
-  assert.equal(this.needsReturnCode, 0)
+  expect(this.needsReturnCode).to.equal(0)
 })
 
 Then("the needs list passes", function () {
-  assert.equal(this.needsReturnCode, 0)
+  expect(this.needsReturnCode).to.equal(0)
 })
 
 Then("the needs check fails", function () {
-  assert.equal(this.needsReturnCode, 1)
+  expect(this.needsReturnCode).to.equal(1)
 })
 
 Then("the needs list fails", function () {
-  assert.equal(this.needsReturnCode, 1)
+  expect(this.needsReturnCode).to.equal(1)
 })
 
 Then("tells me that the needs file was invalid", function () {
-  assert.equal(this.stdout, "")
-  assert(this.stderr.startsWith("Needs file was invalid"))
+  expect(this.stdout).to.be.empty
+  expect(this.stderr).to.include("Needs file was invalid")
 })
 
 Then("tells me that the needs file was missing", function () {
-  assert.equal(this.stdout, "")
-  assert.equal(this.stderr, "Needs file not found. Please try again with the \"--file\" option.")
+  expect(this.stdout).to.be.empty
+  expect(this.stderr).to.include("Needs file not found. Please try again with the \"--file\" option.")
 })
 
 Then("I see the list of needs", function () {
-  assert(this.stdout.length > 0)
+  expect(this.stdout).to.not.be.empty
 })
 
 Then("outputs the unsatisfied need", function () {
-  assert.equal(this.stderr.trim(), "Some needs were unsatisfied:")
-  assert(this.stdout.length > 0)
+  expect(this.stderr).to.include("Some needs were unsatisfied:")
+  expect(this.stdout).to.not.be.empty
 })
 

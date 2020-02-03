@@ -78,6 +78,20 @@ describe("or", function () {
       }).not.toThrow()
     })
 
+    it("works with the metadata field", function () {
+      expect(function () {
+        new Or({
+          "type": "or",
+          "needs": [{
+            "type": "always_happy"
+          }],
+          "metadata": {
+            "test-environment": "units"
+          }
+        }, new FakeTypes())
+      }).not.toThrow()
+    })
+
     it("works with the optional field", function () {
       expect(function () {
         new Or({

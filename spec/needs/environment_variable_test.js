@@ -62,6 +62,18 @@ describe("environment_variable", function () {
       }).not.toThrow()
     })
 
+    it("works with the metadata field", function () {
+      expect(function () {
+        new EnvironmentVariable({
+          "type": "environment_variable",
+          "name": "PIVNET_TOKEN",
+          "metadata": {
+            "test-environment": "units"
+          }
+        })
+      }).not.toThrow()
+    })
+
     it("works with the optional field", function () {
       expect(function () {
         new EnvironmentVariable({

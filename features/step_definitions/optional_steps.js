@@ -1,5 +1,5 @@
-const assert = require("assert")
 const { Given, Then } = require("cucumber")
+const { expect } = require("chai")
 const fs = require("fs").promises
 const path = require("path")
 
@@ -24,9 +24,20 @@ Given("a needs file with an incorrect optional need", async function () {
 })
 
 Then("I see the optional need in the output", function () {
-  assert.equal(this.stdout, JSON.stringify([{"type":"environment_variable","optional":true,"name":"MY_ENVIRONMENT_VARIABLE_1"}], null, 2))
+  let expected = JSON.stringify([{
+    "type": "environment_variable",
+    "optional": true,
+    "name": "MY_ENVIRONMENT_VARIABLE_1"
+  }], null, 2)
+  expect(this.stdout).to.equal(expected)
 })
 
 Then("I see the unsatisfied optional need in the output", function () {
-  assert.equal(this.stdout, JSON.stringify([{"type":"environment_variable","optional":true,"name":"MY_ENVIRONMENT_VARIABLE_1","satisfied":false}], null, 2))
+  let expected = JSON.stringify([{
+    "type": "environment_variable",
+    "optional": true,
+    "name": "MY_ENVIRONMENT_VARIABLE_1",
+    "satisfied": false
+  }], null, 2)
+  expect(this.stdout).to.equal(expected)
 })

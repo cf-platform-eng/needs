@@ -52,6 +52,18 @@ describe("file", function () {
       }).not.toThrow()
     })
 
+    it("works with the metadata field", function () {
+      expect(function () {
+        new File({
+          "type": "file",
+          "path": "/a/path/to/a/file",
+          "metadata": {
+            "test-environment": "units"
+          }
+        })
+      }).not.toThrow()
+    })
+
     it("works with the optional field", function () {
       expect(function () {
         new File({

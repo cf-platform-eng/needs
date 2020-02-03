@@ -82,6 +82,18 @@ describe("binary", function () {
       }).not.toThrow()
     })
 
+    it("works with the metadata field", function () {
+      expect(function () {
+        new Binary({
+          "type": "binary",
+          "name": "my-binary",
+          "metadata": {
+            "test-environment": "units"
+          }
+        })
+      }).not.toThrow()
+    })
+
     it("works with the optional field", function () {
       expect(function () {
         new Binary({

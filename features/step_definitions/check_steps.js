@@ -1,5 +1,5 @@
-const assert = require("assert")
 const { Given, Then } = require("cucumber")
+const { expect } = require("chai")
 
 Given("the needs are satisfied", function () {
   process.env.MY_ENVIRONMENT_VARIABLE_1 = "set"
@@ -17,21 +17,53 @@ Given("a need is unsatisfied", function () {
 })
 
 Then("I don't see any needs", function () {
-  assert.equal(this.stdout, "[]")
+  expect(this.stdout).to.equal("[]")
 })
 
 Then("I see the satisfied need", function () {
-  assert.equal(this.stdout, JSON.stringify([{"type":"environment_variable","name":"MY_ENVIRONMENT_VARIABLE_1","satisfied":true}], null, 2))
+  let expected = JSON.stringify([{
+    "type": "environment_variable",
+    "name": "MY_ENVIRONMENT_VARIABLE_1",
+    "satisfied": true
+  }], null, 2)
+  expect(this.stdout).to.equal(expected)
 })
 
 Then("I see the unsatisfied need", function () {
-  assert.equal(this.stdout, JSON.stringify([{"type":"environment_variable","name":"MY_ENVIRONMENT_VARIABLE_2","satisfied":false}], null, 2))
+  let expected = JSON.stringify([{
+    "type": "environment_variable",
+    "name": "MY_ENVIRONMENT_VARIABLE_2",
+    "satisfied": false
+  }], null, 2)
+  expect(this.stdout).to.equal(expected)
 })
 
 Then("I see all of the needs", function () {
-  assert.equal(this.stdout, JSON.stringify([{"type":"environment_variable","name":"MY_ENVIRONMENT_VARIABLE_1","satisfied":true},{"type":"environment_variable","name":"MY_ENVIRONMENT_VARIABLE_2","satisfied":true}], null, 2))
+  let expected = JSON.stringify([
+    {
+      "type": "environment_variable",
+      "name": "MY_ENVIRONMENT_VARIABLE_1",
+      "satisfied": true
+    }, {
+      "type": "environment_variable",
+      "name": "MY_ENVIRONMENT_VARIABLE_2",
+      "satisfied": true
+    }
+  ], null, 2)
+  expect(this.stdout).to.equal(expected)
 })
 
 Then("I see all of the needs showing the unsatisfied need", function () {
-  assert.equal(this.stdout, JSON.stringify([{"type":"environment_variable","name":"MY_ENVIRONMENT_VARIABLE_1","satisfied":true},{"type":"environment_variable","name":"MY_ENVIRONMENT_VARIABLE_2","satisfied":false}], null, 2))
+  let expected = JSON.stringify([
+    {
+      "type": "environment_variable",
+      "name": "MY_ENVIRONMENT_VARIABLE_1",
+      "satisfied": true
+    }, {
+      "type": "environment_variable",
+      "name": "MY_ENVIRONMENT_VARIABLE_2",
+      "satisfied": false
+    }
+  ], null, 2)
+  expect(this.stdout).to.equal(expected)
 })
