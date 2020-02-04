@@ -1,6 +1,116 @@
-const check = require("../cmd/check.js")
+const { check, colorize, formatNeeds } = require("../cmd/check.js")
+const colors = require("colors/safe")
 const And = require("../lib/needs/and.js")
+const AlwaysHappy = require("./helpers/needs/always_happy.js")
+const AlwaysSad = require("./helpers/needs/always_sad.js")
 const FakeTypes = require("./helpers/fake_types.js")
+
+describe("colorize", function () {
+  describe("unsatisfied need", function () {
+    it("colors the need red", function () {
+      let need = new AlwaysSad()
+      need.satisfied = false
+      let result = colorize(need)
+      expect(result).toBe(colors.red(`{
+  "type": "always_sad",
+  "satisfied": false
+}`))
+    })
+  })
+
+  describe("unsatisfied, but optional need", function () {
+    it("colors the need yellow", function () {
+      let need = new AlwaysSad()
+      need.optional = true
+      need.satisfied = false
+      let result = colorize(need)
+      expect(result).toBe(colors.yellow(`{
+  "type": "always_sad",
+  "optional": true,
+  "satisfied": false
+}`))
+    })
+  })
+
+  describe("satisfied need", function () {
+    it("does not color the need", function () {
+      let need = new AlwaysHappy()
+      need.satisfied = true
+      let result = colorize(need)
+      expect(result).toBe((`{
+  "type": "always_happy",
+  "satisfied": true
+}`))
+    })
+  })
+
+  describe("undefined satisfied need", function () {
+    it("does not color the need", function () {
+      let need = new AlwaysHappy()
+      let result = colorize(need)
+      expect(result).toBe(`{
+  "type": "always_happy"
+}`)
+    })
+  })
+})
+
+describe("formatNeeds", function () {
+  let needs
+  beforeEach(function () {
+    needs = [
+      new AlwaysHappy(),
+      new AlwaysSad(),
+      new AlwaysSad()
+    ]
+    needs[0].satisfied = true
+    needs[1].satisfied = false
+    needs[2].optional = true
+    needs[2].satisfied = false
+  })
+
+  describe("colorized", function () {
+    it("returns the stringified needs without colors", function () {
+      let result = formatNeeds(needs, true)
+      expect(result).toBe(`[
+  {
+    "type": "always_happy",
+    "satisfied": true
+  },
+  ` + colors.red("{") + `
+  ` + colors.red("  \"type\": \"always_sad\",") + `
+  ` + colors.red("  \"satisfied\": false") + `
+  ` + colors.red("}") + `,
+  ` + colors.yellow("{") + `
+  ` + colors.yellow("  \"type\": \"always_sad\",") + `
+  ` + colors.yellow("  \"optional\": true,") + `
+  ` + colors.yellow("  \"satisfied\": false") + `
+  ` + colors.yellow("}") + `
+]`)
+    })
+  })
+
+  describe("not colorized", function () {
+    it("returns the stringified needs without colors", function () {
+      let result = formatNeeds(needs, false)
+      expect(result).toBe(`[
+  {
+    "type": "always_happy",
+    "satisfied": true
+  },
+  {
+    "type": "always_sad",
+    "satisfied": false
+  },
+  {
+    "type": "always_sad",
+    "optional": true,
+    "satisfied": false
+  }
+]`)
+    })
+  })
+})
 
 describe("check", function () {
   let needs
@@ -19,8 +129,8 @@ describe("check", function () {
       }, new FakeTypes())
     })
 
-    it("returns 0 and prints all needs", async function () {
-      await expectAsync(check(needs, {})).toBeResolvedTo(0)
+    it("returns true and prints all needs", async function () {
+      await expectAsync(check(needs, {})).toBeResolvedTo(true)
 
       expect(console.log).toHaveBeenCalledWith(JSON.stringify([{
         type: "always_happy",
@@ -32,7 +142,7 @@ describe("check", function () {
       it("prints the list of needs", async function () {
         await expectAsync(check(needs, {
           satisfied: true
-        })).toBeResolvedTo(0)
+        })).toBeResolvedTo(true)
 
         expect(console.log).toHaveBeenCalledWith(JSON.stringify([
           {
@@ -47,7 +157,7 @@ describe("check", function () {
       it("prints an empty list", async function () {
         await expectAsync(check(needs, {
           unsatisfied: true
-        })).toBeResolvedTo(0)
+        })).toBeResolvedTo(true)
 
         expect(console.log).toHaveBeenCalledWith("[]")
       })
@@ -57,7 +167,7 @@ describe("check", function () {
       it("calls check on the needs with andIdentify true", async function () {
         await expectAsync(check(needs, {
           identify: true
-        })).toBeResolvedTo(0)
+        })).toBeResolvedTo(true)
 
         expect(console.log).toHaveBeenCalledWith(JSON.stringify([
           {
@@ -82,8 +192,8 @@ describe("check", function () {
       }, new FakeTypes())
     })
 
-    it("returns 1 and prints all needs", async function () {
-      await expectAsync(check(needs, {})).toBeResolvedTo(1)
+    it("returns false and prints all needs", async function () {
+      await expectAsync(check(needs, {})).toBeResolvedTo(false)
 
       expect(console.error).toHaveBeenCalledWith("Some needs were unsatisfied:")
       expect(console.log).toHaveBeenCalledWith(JSON.stringify([{
@@ -99,13 +209,13 @@ describe("check", function () {
       it("prints the list of satisfied needs", async function () {
         await expectAsync(check(needs, {
           satisfied: true
-        })).toBeResolvedTo(1)
+        })).toBeResolvedTo(false)
 
         expect(console.error).toHaveBeenCalledWith("Some needs were unsatisfied:")
         expect(console.log).toHaveBeenCalledWith(JSON.stringify([{
           type: "always_happy",
           satisfied: true
-        }], null, 2))  
+        }], null, 2))
       })
     })
 
@@ -113,7 +223,7 @@ describe("check", function () {
       it("prints the list of unsatisfied needs", async function () {
         await expectAsync(check(needs, {
           unsatisfied: true
-        })).toBeResolvedTo(1)
+        })).toBeResolvedTo(false)
 
         expect(console.error).toHaveBeenCalledWith("Some needs were unsatisfied:")
         expect(console.log).toHaveBeenCalledWith(JSON.stringify([{
@@ -135,8 +245,8 @@ describe("check", function () {
       }, new FakeTypes())
     })
 
-    it("returns 0", async function () {
-      await expectAsync(check(needs, {})).toBeResolvedTo(0)
+    it("returns true", async function () {
+      await expectAsync(check(needs, {})).toBeResolvedTo(true)
 
       expect(console.log).toHaveBeenCalledWith(JSON.stringify([{
         type: "always_sad",
@@ -149,9 +259,9 @@ describe("check", function () {
       it("prints the list of satisfied needs", async function () {
         await expectAsync(check(needs, {
           satisfied: true
-        })).toBeResolvedTo(0)
+        })).toBeResolvedTo(true)
 
-        expect(console.log).toHaveBeenCalledWith("[]")  
+        expect(console.log).toHaveBeenCalledWith("[]")
       })
     })
 
@@ -159,7 +269,7 @@ describe("check", function () {
       it("prints the list of unsatisfied needs", async function () {
         await expectAsync(check(needs, {
           unsatisfied: true
-        })).toBeResolvedTo(0)
+        })).toBeResolvedTo(true)
 
         expect(console.log).toHaveBeenCalledWith(JSON.stringify([{
           type: "always_sad",

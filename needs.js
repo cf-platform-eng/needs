@@ -1,22 +1,19 @@
 #!/usr/bin/env node
 
-const fs = require("fs")
+const fs = require("fs").promises
 const path = require("path")
-const { promisify } = require("util")
-const readFile = promisify(fs.readFile)
 
 const Types = require("./lib/types.js")
 const types = new Types()
 const And = types.get("and")
-const check = require("./cmd/check.js")
+const { check } = require("./cmd/check.js")
 
 async function loadNeedsFromFile(file) {
   try {
-    let raw = await readFile(file)
-    let data = JSON.parse(raw)
+    let raw = await fs.readFile(file)
     return new And({
       type: "and",
-      needs: data
+      needs: JSON.parse(raw.toString())
     }, types)
   } catch (err) {
     if (err.code === "ENOENT") {
@@ -34,8 +31,72 @@ async function loadNeedsFromFile(file) {
 }
 
 async function loadVersion() {
-  let rawVersion = await readFile(path.join(__dirname, "version"))
+  let rawVersion = await fs.readFile(path.join(__dirname, "version"))
   return rawVersion.toString()
+}
+
+async function listCommand(args) {
+  let needs = await loadNeedsFromFile(args.argv.file)
+  console.log(JSON.stringify(needs.needs, null, 2))
+}
+
+async function checkCommandBuilder(yargs) {
+  return yargs
+    .option("identify", {
+      type: "boolean",
+      describe: "Identify the satisfied needs with \"identify\" fields"
+    })
+    .option("colorize", {
+      type: "boolean",
+      default: true,
+      describe: "Use terminal colors",
+    })
+    // If stdout is *not* a TTY (e.g. being piped to some other command), disable colors
+    .coerce("colorize", colorize => colorize && Boolean(process.stdout.isTTY))
+    .option("satisfied", {
+      type: "boolean",
+      describe: "Only list satisfied needs"
+    })
+    .option("unsatisfied", {
+      type: "boolean",
+      describe: "Only list unsatisfied needs"
+    })
+}
+
+async function checkCommand(args) {
+  let needs = await loadNeedsFromFile(args.file)
+
+  try {
+    process.exit(await check(needs, args) ? 0 : 1)
+  } catch (err) {
+    console.error("Failed to check needs: ", err)
+    process.exit(1)
+  }
+}
+
+function typesCommand() {
+  console.log("Supported types:")
+  types.all().sort().forEach((type) => {
+    console.log(`  ${type}`)
+  })
+}
+
+function typeCommand(args) {
+  if (types.has(args.typeName)) {
+    let type = types.get(args.typeName)
+    console.log(type.info)
+  } else {
+    console.error(`Type "${args.typeName}" does not exist`)
+    console.error(`Use "${args.$0} types" to get the list of installed types`)
+    process.exit(1)
+  }
+}
+
+function typeCommandBuilder(yargs) {
+  return yargs.positional("typeName", {
+    describe: "The name of the type",
+    type: "string"
+  })
 }
 
 async function run() {
@@ -50,55 +111,10 @@ async function run() {
       type: "string",
       normalize: true,
     })
-    .command("list", "List and validate needs in the needs file", async (args) => {
-      let needs = await loadNeedsFromFile(args.argv.file)
-      console.log(JSON.stringify(needs.needs, null, 2))
-    })
-    .command("check", "Check if the needs are satisfied", (yargs) => {
-      return yargs
-        .option("satisfied", {
-          type: "boolean",
-          describe: "Only list satisfied needs"
-        })
-        .option("unsatisfied", {
-          type: "boolean",
-          describe: "Only list unsatisfied needs"
-        })
-        .option("identify", {
-          type: "boolean",
-          describe: "Identify the satisfied needs with \"identify\" fields"
-        })
-    }, async (argv) => {
-      let needs = await loadNeedsFromFile(argv.file)
-
-      try {
-        process.exit(await check(needs, argv))
-      } catch (err) {
-        console.error("Failed to check needs: ", err)
-        process.exit(1)
-      }
-    })
-    .command("types", "List available need types", () => {
-      console.log("Supported types:")
-      types.all().sort().forEach((type) => {
-        console.log(`  ${type}`)
-      })
-    })
-    .command("type <typeName>", "Describe a given type", (yargs) => {
-      yargs.positional("typeName", {
-        describe: "The name of the type",
-        type: "string"
-      })
-    }, (args) => {
-      if (types.has(args.typeName)) {
-        let type = types.get(args.typeName)
-        console.log(type.info)
-      } else {
-        console.error(`Type "${args.typeName}" does not exist`)
-        console.error(`Use "${args.$0} types" to get the list of installed types`)
-        process.exit(1)
-      }
-    })
+    .command("list", "List and validate needs in the needs file", listCommand)
+    .command("check", "Check if the needs are satisfied", checkCommandBuilder, checkCommand)
+    .command("types", "List available need types", typesCommand)
+    .command("type <typeName>", "Describe a given type", typeCommandBuilder, typeCommand)
     .demandCommand(1, "Please specify a command")
     .strict(true)
     .version(version)
@@ -106,4 +122,5 @@ async function run() {
     .alias("h", "help")
     .argv
 }
+
 run()

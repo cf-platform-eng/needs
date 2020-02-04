@@ -1,0 +1,32 @@
+[
+  {
+    "type": "environment_variable",
+    "name": "TEST_VAR",
+    "description": "Should not be satisfied"
+  },
+  {
+    "type": "environment_variable",
+    "name": "PATH",
+    "description": "Should be satisfied"
+  },
+  {
+    "type": "file",
+    "path": "./sample/needs.json",
+    "description": "Should be satisfied"
+  },
+  {
+    "type": "file",
+    "path": "/does/not/exist.json",
+    "description": "Should not be satisfied"
+  },
+  {
+    "type": "binary",
+    "name": "missing_but_optional",
+    "optional": true
+  },
+  {
+    "type": "binary",
+    "name": "git",
+    "description": "Should be satisfied"
+  }
+]

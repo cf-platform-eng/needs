@@ -1,7 +1,7 @@
 let Need = require("../../../lib/needs/need.js")
 class AlwaysHappy extends Need {
-  constructor() {
-    super({}, {
+  constructor(input) {
+    super({}, input || {
       type: AlwaysHappy.type
     })
   }
