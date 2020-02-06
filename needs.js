@@ -1,6 +1,11 @@
 #!/usr/bin/env node
 
-const fs = require("fs").promises
+const fs = require("fs")
+const { promisify } = require("util")
+const readFile = promisify(fs.readFile)
+// Note, you can *not* use require("fs").promises, because that messes
+// with the pkg's local /snapshot file system.
+
 const path = require("path")
 
 const Types = require("./lib/types.js")
@@ -10,7 +15,7 @@ const { check } = require("./cmd/check.js")
 
 async function loadNeedsFromFile(file) {
   try {
-    let raw = await fs.readFile(file)
+    let raw = await readFile(file)
     return new And({
       type: "and",
       needs: JSON.parse(raw.toString())
@@ -31,8 +36,13 @@ async function loadNeedsFromFile(file) {
 }
 
 async function loadVersion() {
-  let rawVersion = await fs.readFile(path.join(__dirname, "version"))
-  return rawVersion.toString()
+  try {
+    let rawVersion = await readFile(path.join(__dirname, "version"))
+    return rawVersion.toString()
+  } catch (err) {
+    console.error("Failed to load version: ", err)
+    process.exit(1)
+  }
 }
 
 async function listCommand(args) {
