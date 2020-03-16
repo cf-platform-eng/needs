@@ -13,22 +13,22 @@
   },
   "author": "Pete Wall",
   "dependencies": {
-    "ajv": "^6.10.2",
+    "ajv": "^6.12.0",
     "colors": "^1.4.0",
     "executable": "^4.1.1",
     "glob": "^7.1.4",
     "isexe": "^2.0.0",
-    "which": "^2.0.1",
-    "yargs": "^15.0.1"
+    "which": "^2.0.2",
+    "yargs": "^15.0.2"
   },
   "devDependencies": {
     "chai": "^4.2.0",
-    "cucumber": "^6.0.2",
+    "cucumber": "^6.0.5",
     "eslint": "^6.5.1",
-    "eslint-plugin-jasmine": "^4.0.0",
+    "eslint-plugin-jasmine": "^4.1.0",
     "jasmine": "^3.5.0",
     "pkg": "^4.4.2",
-    "rimraf": "^3.0.0"
+    "rimraf": "^3.0.2"
   },
   "bin": {
     "needs": "./needs.js"
