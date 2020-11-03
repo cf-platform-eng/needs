@@ -59,8 +59,8 @@ When("I check the needs", function (done) {
   })
 })
 
-When("I check the needs with --identify", function (done) {
-  this.needsProcess = exec(`./needs.js check --file ${this.needsFile} --identify`, {
+When("I check the needs with --no-identify", function (done) {
+  this.needsProcess = exec(`./needs.js check --file ${this.needsFile} --no-identify`, {
     env: process.env
   }, (err, stdout, stderr) => {
     this.needsReturnCode = err ? err.code : 0

@@ -54,7 +54,8 @@ async function checkCommandBuilder(yargs) {
   return yargs
     .option("identify", {
       type: "boolean",
-      describe: "Identify the satisfied needs with \"identify\" fields"
+      default: true,
+      describe: "Identify the satisfied needs with \"identify\" fields. Disable with --no-identify."
     })
     .option("colorize", {
       type: "boolean",
