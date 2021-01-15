@@ -13,7 +13,7 @@
   },
   "author": "Pete Wall",
   "dependencies": {
-    "ajv": "^6.12.0",
+    "ajv": "^7.0.3",
     "colors": "^1.4.0",
     "executable": "^4.1.1",
     "glob": "^7.1.4",
