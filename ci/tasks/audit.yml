@@ -9,6 +9,6 @@ caches:
 
 run:
   dir: source
-  path: /usr/bin/npm
+  path: /usr/local/bin/npm
   args:
     - audit
