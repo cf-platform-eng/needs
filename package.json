@@ -6,7 +6,7 @@
   "repository": "https://github.com/cf-platform-eng/needs",
   "main": "needs.js",
   "scripts": {
-    "build": "pkg . --targets latest-linux-x64,latest-macos-x64 --out-path ./build",
+    "build": "./build.js",
     "lint": "eslint .",
     "test": "jasmine",
     "feature-test": "cucumber-js"
