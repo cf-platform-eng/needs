@@ -16,18 +16,18 @@
     "ajv": "^7.1.1",
     "colors": "^1.4.0",
     "executable": "^4.1.1",
-    "glob": "^7.1.4",
+    "glob": "^7.1.6",
     "isexe": "^2.0.0",
     "which": "^2.0.2",
-    "yargs": "^16.0.2"
+    "yargs": "^16.2.0"
   },
   "devDependencies": {
-    "chai": "^4.2.0",
+    "chai": "^4.3.1",
     "cucumber": "^6.0.5",
-    "eslint": "^7.0.0",
-    "eslint-plugin-jasmine": "^4.1.0",
-    "jasmine": "^3.5.0",
-    "pkg": "^4.4.2",
+    "eslint": "^7.21.0",
+    "eslint-plugin-jasmine": "^4.1.2",
+    "jasmine": "^3.6.4",
+    "pkg": "^4.4.9",
     "rimraf": "^3.0.2"
   },
   "bin": {
