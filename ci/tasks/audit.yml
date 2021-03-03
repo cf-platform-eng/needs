@@ -4,9 +4,6 @@ platform: linux
 inputs:
   - name: source
 
-caches:
-  - path: source/node_modules
-
 run:
   dir: source
   path: /usr/local/bin/npm

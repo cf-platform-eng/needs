@@ -3,7 +3,7 @@ SOURCES := $(shell ls *.js cmd/*.js lib/*.js lib/needs/*.js)
 .PHONY: deps
 deps: node_modules/.installed
 
-node_modules/.installed: package.json
+node_modules/.installed: package.json package-lock.json
 	npm install
 	touch node_modules/.installed
 

@@ -9,9 +9,6 @@ outputs:
   - name: build
     path: source/build
 
-caches:
-  - path: source/node_modules
-
 run:
   path: /bin/bash
   args:
