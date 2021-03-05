@@ -55,7 +55,7 @@ Shows information about the need type.
 
 ## Needs file
 
-The needs file is a JSON array of need objects. By default, needs looks for a file named `needs.json` in the working directory, but it can be set by using the `-f|--flag` argument.
+The needs file is a JSON array of need objects. By default, needs looks for a file named `needs.json` in the working directory, but it can be set by using the `-f|--file` argument.
 
 ### `description` field
 
