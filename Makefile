@@ -25,8 +25,8 @@ clean:
 	rm -rf node_modules
 
 .PHONY: build
-build: version deps build/needs-linux build/needs-macos
-build/needs-linux build/needs-macos: $(SOURCES)
+build: version deps build/needs-linux build/needs-macos build/needs-alpine
+build/needs-linux build/needs-macos build/needs-alpine: $(SOURCES)
 	mkdir -p build
 	npm run build
 
