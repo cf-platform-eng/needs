@@ -6,6 +6,6 @@ inputs:
 
 run:
   dir: source
-  path: /usr/local/bin/npm
+  path: yarn
   args:
     - audit
