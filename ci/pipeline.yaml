@@ -39,7 +39,7 @@ resources:
     type: docker-image
     icon: docker
     source:
-      repository: harbor-repo.vmware.com/partner_engineering/needs
+      repository: projects.vmware.com/tanzu_isv_engineering/needs
       username: ((harbor.username))
       password: ((harbor.token))
 
