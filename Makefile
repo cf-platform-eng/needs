@@ -33,3 +33,7 @@ build/needs-linux build/needs-macos build/needs-alpine: $(SOURCES)
 .PHONY: build-image
 build-image: build version
 	docker build --tag cfplatformeng/needs:$(shell cat version) --file Dockerfile .
+
+.PHONY: set-pipeline
+set-pipeline: ci/pipeline.yaml
+	fly -t ppe-isv set-pipeline -p needs -c ci/pipeline.yaml

@@ -1,0 +1,238 @@
+---
+resource_types:
+  - name: pull-request
+    type: docker-image
+    source:
+      repository: harbor-repo.vmware.com/dockerhub-proxy-cache/teliaoss/github-pr-resource
+      username: ((harbor.username))
+      password: ((harbor.token))
+
+resources:
+  - name: source
+    type: git
+    icon: github
+    source:
+      uri: git@github.com:cf-platform-eng/needs.git
+      private_key: ((github.private_key))
+
+  - name: pre-release
+    type: github-release
+    icon: github
+    source:
+      owner: cf-platform-eng
+      repository: needs
+      access_token: ((github.access_token))
+      pre_release: true
+      release: false
+
+  - name: release
+    type: github-release
+    icon: github
+    source:
+      owner: cf-platform-eng
+      repository: needs
+      access_token: ((github.access_token))
+      pre_release: false
+      release: true
+
+  - name: docker-image
+    type: docker-image
+    icon: docker
+    source:
+      repository: harbor-repo.vmware.com/partner_engineering/needs
+      username: ((harbor.username))
+      password: ((harbor.token))
+
+  - name: version
+    type: semver
+    source:
+      driver: git
+      uri: git@github.com:cf-platform-eng/isv-ci-versions.git
+      branch: main
+      file: needs
+      private_key: ((github.private_key))
+
+  - name: node
+    type: docker-image
+    icon: docker
+    source:
+      repository: harbor-repo.vmware.com/dockerhub-proxy-cache/library/node
+      username: ((harbor.username))
+      password: ((harbor.token))
+
+  - name: pull-requests
+    type: pull-request
+    icon: github
+    source:
+      repository: cf-platform-eng/needs
+      access_token: ((github.access_token))
+
+jobs:
+  - name: test
+    plan:
+      - in_parallel:
+        - get: node
+        - get: source
+          trigger: true
+      - task: run-tests
+        image: node
+        file: source/ci/tasks/test.yml
+        params:
+          npm_config_registry: https://build-artifactory.eng.vmware.com/api/npm/npm/
+      - task: run-feature-tests
+        image: node
+        file: source/ci/tasks/test-features.yml
+        params:
+          npm_config_registry: https://build-artifactory.eng.vmware.com/api/npm/npm/
+
+  - name: build
+    serial_groups: [version]
+    plan:
+      - in_parallel:
+        - get: node
+          passed:
+            - test
+        - get: source
+          passed:
+            - test
+          trigger: true
+        - get: version
+          params: { pre: rc }
+      - task: build
+        image: node
+        file: source/ci/tasks/build.yml
+        params:
+          npm_config_registry: https://build-artifactory.eng.vmware.com/api/npm/npm/
+      - task: test-version
+        image: node
+        params:
+          npm_config_registry: https://build-artifactory.eng.vmware.com/api/npm/npm/
+        config:
+          platform: linux
+          inputs:
+            - name: build
+          run:
+            path: bash
+            dir: build
+            args:
+            - -exc
+            - ./needs-linux --version
+      - put: version
+        inputs: detect
+        params: { file: version/version }
+      - in_parallel:
+        - put: pre-release
+          inputs: detect
+          params:
+            name: version/version
+            tag: version/version
+            globs:
+              - build/*
+        - put: docker-image
+          inputs:
+            - build
+            - source
+            - version
+          params:
+            build: .
+            dockerfile: source/Dockerfile
+            tag_as_latest: false
+            tag_file: version/version
+
+  - name: release
+    serial_groups: [version]
+    plan:
+      - in_parallel:
+        - get: node
+          passed:
+            - build
+        - get: source
+          passed:
+            - build
+        - get: version
+          params: { bump: final }
+      - task: build
+        image: node
+        file: source/ci/tasks/build.yml
+        params:
+          npm_config_registry: https://build-artifactory.eng.vmware.com/api/npm/npm/
+      - in_parallel:
+        - put: release
+          inputs: detect
+          params:
+            name: version/version
+            tag: version/version
+            globs:
+              - build/*
+        - put: docker-image
+          inputs:
+            - build
+            - source
+            - version
+          params:
+            build: .
+            dockerfile: source/Dockerfile
+            tag_as_latest: true
+            tag_file: version/version
+      - put: version
+        inputs: detect
+        params: { bump: patch }
+
+  - name: bump-major-version
+    serial_groups: [version]
+    plan:
+      - put: version
+        inputs: detect
+        params:
+          bump: major
+
+  - name: bump-minor-version
+    serial_groups: [version]
+    plan:
+      - put: version
+        inputs: detect
+        params:
+          bump: minor
+
+  - name: test-pull-request
+    serial: true
+    plan:
+      - get: node
+      - get: source
+        resource: pull-requests
+        trigger: true
+        version: every
+        params:
+          integration_tool: rebase
+      - put: pull-requests
+        inputs: detect
+        params:
+          path: source
+          status: pending
+      - task: run-tests
+        image: node
+        file: source/ci/tasks/test.yml
+        params:
+          npm_config_registry: https://build-artifactory.eng.vmware.com/api/npm/npm/
+          on_failure:
+            put: pull-requests
+            inputs: detect
+            params:
+              path: source
+              status: failure
+      - task: run-feature-tests
+        image: node
+        file: source/ci/tasks/test-features.yml
+        params:
+          npm_config_registry: https://build-artifactory.eng.vmware.com/api/npm/npm/
+        on_failure:
+          put: pull-requests
+          inputs: detect
+          params:
+            path: source
+            status: failure
+      - put: pull-requests
+        inputs: detect
+        params:
+          path: source
+          status: success
