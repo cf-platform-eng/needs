@@ -39,9 +39,9 @@ resources:
     type: docker-image
     icon: docker
     source:
-      repository: projects.vmware.com/tanzu_isv_engineering/needs
-      username: ((harbor.username))
-      password: ((harbor.token))
+      repository: projects.registry.vmware.com/tanzu_isv_engineering/needs
+      username: ((harbor-public.username))
+      password: ((harbor-public.token))
 
   - name: version
     type: semver
