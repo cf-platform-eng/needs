@@ -1,4 +1,4 @@
-FROM harbor-repo.vmware.com/dockerhub-proxy-cache/library/ubuntu
+FROM harbor-repo.vmware.com/dockerhub-proxy-cache/library/ubuntu:20.04
 LABEL maintainer="Tanzu ISV Partner Engineering Team <tanzu-isv-engineering@groups.vmware.com>"
 
 COPY build/needs-linux /usr/local/bin/needs
