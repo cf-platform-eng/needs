@@ -3,7 +3,6 @@ const { exec } = require("child_process")
 const { expect } = require("chai")
 const fs = require("fs").promises
 const path = require("path")
-const util = require("util")
 const { rimraf } = require("rimraf")
 
 Before(async function () {
