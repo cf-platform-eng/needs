@@ -3,8 +3,7 @@ const { exec } = require("child_process")
 const { expect } = require("chai")
 const fs = require("fs").promises
 const path = require("path")
-const util = require("util")
-const rimraf = util.promisify(require("rimraf"))
+const { rimraf } = require("rimraf")
 
 Before(async function () {
   this.initialPath = process.env.PATH
