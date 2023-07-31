@@ -1115,6 +1115,11 @@ isexe@^2.0.0:
   resolved "https://registry.yarnpkg.com/isexe/-/isexe-2.0.0.tgz#e8fbf374dc556ff8947a10dcb0572d633f2cfa10"
   integrity sha512-RHxMLp9lnKHGHRng9QFhRCMbYAcVpn69smSGcq3f36xjgVVWThj4qqLbTLlq7Ssj8B+fIQ1EuCEGI2lKsyQeIw==
 
+isexe@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/isexe/-/isexe-3.1.0.tgz#a980b5c36f349a306453ba35f05248e54f75cc60"
+  integrity sha512-RTzKlT4435HNIbKWZtifloLcA36uSBc/AsC3pl3nLZaRUZfF0gQyMbvXNAT262O0RB1Vd6rA8oXlb+iKJM7E/g==
+
 jackspeak@^2.0.3:
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/jackspeak/-/jackspeak-2.2.1.tgz#655e8cf025d872c9c03d3eb63e8f0c024fef16a6"
