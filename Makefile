@@ -32,7 +32,7 @@ build/needs-linux build/needs-macos build/needs-alpine: $(SOURCES)
 
 .PHONY: build-image
 build-image: build version
-	docker build --tag harbor-repo.vmware.com/partner_engineering/needs:$(shell cat version) --file Dockerfile .
+	docker build --tag us-west1-docker.pkg.dev/isv-tile-partners/partner-engineering/needs:$(shell cat version) --file Dockerfile .
 
 .PHONY: set-pipeline
 set-pipeline: ci/pipeline.yaml
