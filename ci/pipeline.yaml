@@ -1,7 +1,7 @@
 ---
 resource_types:
   - name: pull-request
-    type: docker-image
+    type: registry-image
     source:
       repository: mirror.gcr.io/teliaoss/github-pr-resource
       username: _json_key
@@ -53,7 +53,7 @@ resources:
       private_key: ((github.private_key))
 
   - name: node
-    type: docker-image
+    type: registry-image
     icon: docker
     source:
       repository: mirror.gcr.io/node
