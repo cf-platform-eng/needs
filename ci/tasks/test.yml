@@ -5,7 +5,15 @@ inputs:
   - name: source
 
 run:
-  dir: source
-  path: /usr/bin/make
+  path: /bin/bash
   args:
-    - test
+    - -exc
+    - |
+      cd source
+      cat << EOF > ~/.npmrc
+      fetch-timeout=300000
+      always-auth=true
+      email="${artifactory_auth_email}"
+      //usw1.packages.broadcom.com/artifactory/api/npm/npmjs/:_auth="${artifactory_auth_token}"
+      EOF
+      make test
