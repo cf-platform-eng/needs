@@ -79,12 +79,16 @@ jobs:
         image: node
         file: source/ci/tasks/test.yml
         params:
-          npm_config_registry: https://build-artifactory.eng.vmware.com/api/npm/npm/
+          npm_config_registry: https://usw1.packages.broadcom.com/artifactory/api/npm/npmjs/
+          artifactory_auth_token: ((broadcom_jfrog.auth_token))
+          artifactory_auth_email: ((broadcom_jfrog.auth_email))
       - task: run-feature-tests
         image: node
         file: source/ci/tasks/test-features.yml
         params:
-          npm_config_registry: https://build-artifactory.eng.vmware.com/api/npm/npm/
+          npm_config_registry: https://usw1.packages.broadcom.com/artifactory/api/npm/npmjs/
+          artifactory_auth_token: ((broadcom_jfrog.auth_token))
+          artifactory_auth_email: ((broadcom_jfrog.auth_email))
 
   - name: build
     serial_groups: [version]
@@ -103,11 +107,15 @@ jobs:
         image: node
         file: source/ci/tasks/build.yml
         params:
-          npm_config_registry: https://build-artifactory.eng.vmware.com/api/npm/npm/
+          npm_config_registry: https://usw1.packages.broadcom.com/artifactory/api/npm/npmjs/
+          artifactory_auth_token: ((broadcom_jfrog.auth_token))
+          artifactory_auth_email: ((broadcom_jfrog.auth_email))
       - task: test-version
         image: node
         params:
-          npm_config_registry: https://build-artifactory.eng.vmware.com/api/npm/npm/
+          npm_config_registry: https://usw1.packages.broadcom.com/artifactory/api/npm/npmjs/
+          artifactory_auth_token: ((broadcom_jfrog.auth_token))
+          artifactory_auth_email: ((broadcom_jfrog.auth_email))
         config:
           platform: linux
           inputs:
@@ -156,7 +164,9 @@ jobs:
         image: node
         file: source/ci/tasks/build.yml
         params:
-          npm_config_registry: https://build-artifactory.eng.vmware.com/api/npm/npm/
+          npm_config_registry: https://usw1.packages.broadcom.com/artifactory/api/npm/npmjs/
+          artifactory_auth_token: ((broadcom_jfrog.auth_token))
+          artifactory_auth_email: ((broadcom_jfrog.email))
       - in_parallel:
         - put: release
           inputs: detect
@@ -214,7 +224,9 @@ jobs:
         image: node
         file: source/ci/tasks/test.yml
         params:
-          npm_config_registry: https://build-artifactory.eng.vmware.com/api/npm/npm/
+          npm_config_registry: https://usw1.packages.broadcom.com/artifactory/api/npm/npmjs/
+          artifactory_auth_token: ((broadcom_jfrog.auth_token))
+          artifactory_auth_email: ((broadcom_jfrog.auth_email))
           on_failure:
             put: pull-requests
             inputs: detect
@@ -225,7 +237,9 @@ jobs:
         image: node
         file: source/ci/tasks/test-features.yml
         params:
-          npm_config_registry: https://build-artifactory.eng.vmware.com/api/npm/npm/
+          npm_config_registry: https://usw1.packages.broadcom.com/artifactory/api/npm/npmjs/
+          artifactory_auth_token: ((broadcom_jfrog.auth_token))
+          artifactory_auth_email: ((broadcom_jfrog.auth_email))
         on_failure:
           put: pull-requests
           inputs: detect
