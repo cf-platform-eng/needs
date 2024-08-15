@@ -47,10 +47,11 @@ resources:
     type: semver
     source:
       driver: git
-      uri: git@github.com:cf-platform-eng/isv-ci-versions.git
+      uri: ((github.org_url))/isv-ci-versions.git
       branch: main
+      username: ((github.username))
+      password: ((github.broadcom_github_personal_access_token))
       file: needs
-      private_key: ((github.private_key))
 
   - name: node
     type: registry-image
