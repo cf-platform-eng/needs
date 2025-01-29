@@ -228,12 +228,12 @@ jobs:
           npm_config_registry: https://usw1.packages.broadcom.com/artifactory/api/npm/npmjs/
           artifactory_auth_token: ((broadcom_jfrog.auth_token))
           artifactory_auth_email: ((broadcom_jfrog.auth_email))
-          on_failure:
-            put: pull-requests
-            inputs: detect
-            params:
-              path: source
-              status: failure
+        on_failure:
+          put: pull-requests
+          inputs: detect
+          params:
+            path: source
+            status: failure
       - task: run-feature-tests
         image: node
         file: source/ci/tasks/test-features.yml
