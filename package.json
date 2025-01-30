@@ -28,7 +28,7 @@
     "eslint-plugin-jasmine": "^4.2.2",
     "jasmine": "^5.0.1",
     "pkg": "^5.8.0",
-    "rimraf": "^5.0.1"
+    "rimraf": "^6.0.1"
   },
   "bin": {
     "needs": "./needs.js"
