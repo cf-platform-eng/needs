@@ -167,7 +167,7 @@ jobs:
         params:
           npm_config_registry: https://usw1.packages.broadcom.com/artifactory/api/npm/npmjs/
           artifactory_auth_token: ((broadcom_jfrog.auth_token))
-          artifactory_auth_email: ((broadcom_jfrog.email))
+          artifactory_auth_email: ((broadcom_jfrog.auth_email))
       - in_parallel:
         - put: release
           inputs: detect
