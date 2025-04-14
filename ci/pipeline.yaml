@@ -79,6 +79,7 @@ resources:
       repository: ((artifactory.registry_mirror))/node
       username: ((artifactory.production_username))
       password: ((artifactory.production_password))
+      tag: latest
 
   - name: pull-requests
     type: pull-request
@@ -163,6 +164,7 @@ jobs:
           - get: ubuntu-image
             params:
               format: oci
+          - get: oci-build-task
           - task: build-oci
             privileged: true
             image: oci-build-task
@@ -170,11 +172,12 @@ jobs:
               platform: linux
               inputs:
                 - name: source
+                - name: build
                 - name: ubuntu-image
               outputs:
                 - name: image
               params:
-                CONTEXT: source
+                CONTEXT: .
                 DOCKERFILE: source/Dockerfile
                 IMAGE_ARG_ubuntu_image: ubuntu-image/image.tar
               run:
@@ -221,6 +224,7 @@ jobs:
             - get: ubuntu-image
               params:
                 format: oci
+            - get: oci-build-task
             - task: build-oci
               privileged: true
               image: oci-build-task
@@ -228,11 +232,12 @@ jobs:
                 platform: linux
                 inputs:
                   - name: source
+                  - name: build
                   - name: ubuntu-image
                 outputs:
                   - name: image
                 params:
-                  CONTEXT: source
+                  CONTEXT: .
                   DOCKERFILE: source/Dockerfile
                   IMAGE_ARG_ubuntu_image: ubuntu-image/image.tar
                 run:
