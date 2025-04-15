@@ -140,7 +140,7 @@ jobs:
         config:
           platform: linux
           inputs:
-            - name: build
+            - name: needs-build
           run:
             path: bash
             dir: build
