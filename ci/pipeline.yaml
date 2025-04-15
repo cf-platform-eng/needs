@@ -172,7 +172,7 @@ jobs:
               platform: linux
               inputs:
                 - name: source
-                - name: build
+                - name: needs-build
                 - name: ubuntu-image
               outputs:
                 - name: image
@@ -232,7 +232,7 @@ jobs:
                 platform: linux
                 inputs:
                   - name: source
-                  - name: build
+                  - name: needs-build
                   - name: ubuntu-image
                 outputs:
                   - name: image
