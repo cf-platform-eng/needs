@@ -6,7 +6,7 @@ inputs:
   - name: version
 
 outputs:
-  - name: build
+  - name: needs-build
     path: source/build
 
 run:
