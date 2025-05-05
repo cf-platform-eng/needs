@@ -157,7 +157,7 @@ jobs:
             name: version/version
             tag: version/version
             globs:
-              - build/*
+              - needs-build/*
         - do:
           - file: version/version
             load_var: image_version
@@ -217,7 +217,7 @@ jobs:
             name: version/version
             tag: version/version
             globs:
-              - build/*
+              - needs-build/*
         - do:
             - file: version/version
               load_var: image_version
