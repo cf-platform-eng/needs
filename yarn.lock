@@ -1214,18 +1214,18 @@ jackspeak@^4.0.1:
   dependencies:
     "@isaacs/cliui" "^8.0.2"
 
-jasmine-core@~5.9.0:
-  version "5.9.0"
-  resolved "https://registry.yarnpkg.com/jasmine-core/-/jasmine-core-5.9.0.tgz#140199862ee83f906bf0ff88287e7c440a1776e7"
-  integrity sha512-OMUvF1iI6+gSRYOhMrH4QYothVLN9C3EJ6wm4g7zLJlnaTl8zbaPOr0bTw70l7QxkoM7sVFOWo83u9B2Fe2Zng==
+jasmine-core@~5.11.0:
+  version "5.11.0"
+  resolved "https://registry.yarnpkg.com/jasmine-core/-/jasmine-core-5.11.0.tgz#1343e324a0148508511031a1d5fc0d4b7ee92446"
+  integrity sha512-MPJ8L5yyNul0F2SuEsLASwESXQjJvBXnKu31JWFyRZSvuv2B79K4GDWN3pSqvLheUNh7Fyb6dXwd4rsz95O2Kg==
 
 jasmine@^5.0.1:
-  version "5.9.0"
-  resolved "https://registry.yarnpkg.com/jasmine/-/jasmine-5.9.0.tgz#aff3c5d3b79fea0e4ce0678ae02bbcfe47b55d3a"
-  integrity sha512-SspK51QMnuC92z5zpF4kOkWN+MyZZDOBv8zgzlMAYvMD0UoGwcq5yYaDe1mrpN7wXZ2CFXh5y8Ua2ugwE4OmXQ==
+  version "5.11.0"
+  resolved "https://registry.yarnpkg.com/jasmine/-/jasmine-5.11.0.tgz#8f36ae7fb1756fe4f53739c7e7c41da56123fd12"
+  integrity sha512-MhIYY2pLfRA5hhIvY72ZLilwKeZEBuTyIUv9JDB+b+pEYehsJDW2obKF2dmMtWaFG6pDiFiAUNphpZ7SW7fFMA==
   dependencies:
     glob "^10.2.2"
-    jasmine-core "~5.9.0"
+    jasmine-core "~5.11.0"
 
 js-yaml@^4.1.0:
   version "4.1.0"
